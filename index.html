@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzpdzUk3OIRuffpYAl37zdwDALNXLOBBLMdd41dDZ7KjScCYhM3unR5MJDVpAhUaWL/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjHp6ZcZbOI28rzuK9a1cKNGQnX9Rf7mRSSIgp3t9KjNyFHzP6b4ocRagMDG2P2VsP/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -227,7 +227,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 <body>
 
 <!-- 로딩 -->
-<div id="loadingScreen">
+<div id="loadingScreen" class="hidden">
   <div class="spinner"></div>
   <div class="loading-text">팀원 목록 불러오는 중...</div>
 </div>
@@ -566,4 +566,109 @@ async function saveRecord() {
     date:      document.getElementById("f-date").value,
     monitor:   document.getElementById("f-monitor").value,
     calls:     CALL_ITEMS.map((_, i) => ({
-      resu
+      result: document.getElementById(`r-${i}`).value,
+      detail: document.getElementById(`d-${i}`).value
+    })),
+    post:      { result: document.getElementById("r-post").value, detail: document.getElementById("d-post").value },
+    cpdBefore: document.getElementById("cpd-before").value,
+    cpd2w:     document.getElementById("cpd-2w").value,
+    cpd1m:     document.getElementById("cpd-1m").value,
+    coaching:  document.getElementById("f-coaching").value,
+    feedback:  document.getElementById("f-feedback").value,
+    note:      document.getElementById("f-note").value
+  };
+
+  try {
+    const res    = await fetch(APPS_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (result.status === "ok") {
+      showToast("✅ Google Sheets에 저장되었습니다!", false);
+      await loadHistory();
+      resetForm();
+      switchTab("history", document.querySelectorAll(".tab-btn")[0]);
+    } else {
+      throw new Error(result.message || "저장 실패");
+    }
+  } catch(e) {
+    showToast("❌ 저장에 실패했어요. Apps Script URL을 확인해주세요.", true);
+  }
+
+  btn.disabled = false;
+  text.textContent = "💾 Google Sheets에 저장";
+}
+
+/* ── 유틸 ── */
+function buildCallRows() {
+  document.getElementById("callBody").innerHTML = CALL_ITEMS.map((item, i) => `
+    <tr>
+      <td class="col-item">${item}</td>
+      <td class="col-res"><select class="res-sel ok" id="r-${i}" onchange="styleSelect(this)">
+        <option value="ok">문제없음</option>
+        <option value="warn">보통</option>
+        <option value="bad">개선필요</option>
+      </select></td>
+      <td class="col-det"><input class="det-inp" type="text" id="d-${i}" placeholder="세부 내용"/></td>
+    </tr>`).join("");
+}
+
+function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
+
+function calcCPD() {
+  const before = parseFloat(document.getElementById("cpd-before").value);
+  const w2     = parseFloat(document.getElementById("cpd-2w").value);
+  const m1     = parseFloat(document.getElementById("cpd-1m").value);
+
+  function setChange(elId, base, val) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    if (isNaN(base) || isNaN(val)) {
+      el.textContent = "-"; el.className = "cpd-change none"; return;
+    }
+    const pct = ((val - base) / base * 100).toFixed(1);
+    const isUp = val >= base;
+    el.textContent = (isUp ? "▲ +" : "▼ ") + pct + "%";
+    el.className = "cpd-change " + (isUp ? "up" : "down");
+  }
+
+  setChange("change-2w", before, w2);
+  setChange("change-1m", before, m1);
+}
+
+function setToday() {
+  const el = document.getElementById("f-date");
+  if (el) el.value = new Date().toISOString().split("T")[0];
+}
+
+function resetForm() {
+  setToday();
+  document.getElementById("f-monitor").value = "";
+  CALL_ITEMS.forEach((_, i) => {
+    const s = document.getElementById("r-" + i);
+    if (s) { s.value = "ok"; s.className = "res-sel ok"; }
+    const d = document.getElementById("d-" + i);
+    if (d) d.value = "";
+  });
+  const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
+  const dp = document.getElementById("d-post"); if (dp) dp.value = "";
+  ["cpd-before","cpd-2w","cpd-1m","f-coaching","f-feedback","f-note"].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = "";
+  });
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-" + id).classList.add("active");
+}
+
+function showToast(msg, isErr) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className   = "toast " + (isErr ? "err" : "ok");
+  t.style.display = "flex";
+  setTimeout(() => { t.style.display = "none"; }, 3500);
+}
+</script>
+</body>
+</html>
