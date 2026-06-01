@@ -176,11 +176,15 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .det-inp:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
 
 /* CPD */
-.cpd-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:1rem;}
-.cpd-card{background:var(--bll);border:1.5px solid var(--blb);border-radius:var(--rsm);padding:14px;text-align:center;display:flex;flex-direction:column;gap:8px;}
+.cpd-row{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:1rem;}
+.cpd-card{background:var(--bll);border:1.5px solid var(--blb);border-radius:var(--rsm);padding:14px 16px;display:flex;align-items:center;gap:14px;}
 .cpd-card label{font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;}
 .cpd-card input{padding:10px;border:1.5px solid var(--blb);border-radius:var(--rsm);font-size:18px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;transition:border-color .15s,box-shadow .15s;}
 .cpd-card input:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+.cpd-change{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;margin-left:auto;}
+.cpd-change.up{background:var(--gn);color:var(--gnt);}
+.cpd-change.down{background:var(--rd);color:var(--rdt);}
+.cpd-change.none{background:#F1F5F9;color:var(--mt);}
 
 /* 코칭 기록 */
 .history-empty{text-align:center;padding:3rem 2rem;color:var(--mt);font-size:14px;}
@@ -226,6 +230,28 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 <div id="loadingScreen">
   <div class="spinner"></div>
   <div class="loading-text">팀원 목록 불러오는 중...</div>
+</div>
+
+
+<!-- 암호 화면 -->
+<div id="lockScreen" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);padding:2rem;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+    <div style="width:60px;height:60px;background:#2563EB;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;">🎧</div>
+    <div style="font-size:22px;font-weight:700;color:#0F172A;letter-spacing:-.03em;">상담사 모니터링 · 코칭 관리</div>
+    <div style="font-size:14px;color:#64748B;">CX팀 아이샵케어 · 관리자 전용</div>
+  </div>
+  <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:2rem 2.25rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06);">
+    <div style="font-size:16px;font-weight:700;color:#0F172A;margin-bottom:4px;">🔒 접근 암호 입력</div>
+    <div style="font-size:13px;color:#64748B;margin-bottom:1.5rem;">관리자만 접근할 수 있어요.</div>
+    <input type="password" id="lockInput" placeholder="암호를 입력하세요"
+      style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;"
+      onkeydown="if(event.key==='Enter') checkLock()"/>
+    <button onclick="checkLock()"
+      style="width:100%;padding:12px;background:#2563EB;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;">
+      입장하기
+    </button>
+    <div id="lockErr" style="font-size:13px;color:#991B1B;margin-top:8px;min-height:20px;"></div>
+  </div>
 </div>
 
 <!-- 팀원 선택 -->
@@ -328,9 +354,26 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
         <div class="card-body">
           <div class="cpd-row">
-            <div class="cpd-card"><label>코칭 전 기준</label><input type="text" id="cpd-before" placeholder="4.2"/></div>
-            <div class="cpd-card"><label>2주 후</label><input type="text" id="cpd-2w" placeholder="4.5"/></div>
-            <div class="cpd-card"><label>1개월 후</label><input type="text" id="cpd-1m" placeholder="4.7"/></div>
+            <div class="cpd-card">
+              <div>
+                <label>코칭 전 기준 (콜량)</label>
+                <input type="text" id="cpd-before" placeholder="예: 4.2" oninput="calcCPD()"/>
+              </div>
+            </div>
+            <div class="cpd-card">
+              <div>
+                <label>2주 후 (콜량)</label>
+                <input type="text" id="cpd-2w" placeholder="예: 4.5" oninput="calcCPD()"/>
+              </div>
+              <span class="cpd-change none" id="change-2w">-</span>
+            </div>
+            <div class="cpd-card">
+              <div>
+                <label>1개월 후 (콜량)</label>
+                <input type="text" id="cpd-1m" placeholder="예: 4.7" oninput="calcCPD()"/>
+              </div>
+              <span class="cpd-change none" id="change-1m">-</span>
+            </div>
           </div>
           <div style="display:grid;gap:14px;">
             <div class="field"><label>코칭 내용</label><textarea id="f-coaching" placeholder="코칭 내용을 상세히 입력하세요"></textarea></div>
@@ -352,6 +395,20 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 </div><!-- /appScreen -->
 
 <script>
+const LOCK_PW = "cx2026!!";
+
+function checkLock() {
+  const val = document.getElementById("lockInput").value;
+  if (val === LOCK_PW) {
+    document.getElementById("lockScreen").style.display = "none";
+    sessionStorage.setItem("cx_auth", "ok");
+    initAfterAuth();
+  } else {
+    document.getElementById("lockErr").textContent = "암호가 올바르지 않아요.";
+    document.getElementById("lockInput").value = "";
+  }
+}
+
 const CALL_ITEMS = [
   "오프닝 구간 적절성",
   "경청 태도",
@@ -365,11 +422,21 @@ let currentMember = null;
 let allMembers    = [];
 
 /* ── 초기화 ── */
-window.addEventListener("DOMContentLoaded", async () => {
+async function initAfterAuth() {
   buildCallRows();
   setToday();
   await loadMembers();
   showSelect();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (sessionStorage.getItem("cx_auth") === "ok") {
+    document.getElementById("lockScreen").style.display = "none";
+    initAfterAuth();
+  } else {
+    document.getElementById("loadingScreen").classList.add("hidden");
+    document.getElementById("lockScreen").style.display = "flex";
+  }
 });
 
 /* ── 팀원 목록 로드 (Google Sheets) ── */
@@ -458,7 +525,7 @@ async function loadHistory() {
     }
 
     rows.sort((a, b) => (b[1] || "").localeCompare(a[1] || ""));
-    if (rows[0][16]) document.getElementById("statCPD").textContent = rows[0][16];
+    if (rows[0][18]) document.getElementById("statCPD").textContent = rows[0][18];
 
     list.innerHTML = rows.map(r => {
       const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[3 + i * 2] || "ok" })).filter(x => x.val !== "ok");
@@ -467,8 +534,8 @@ async function loadHistory() {
         : issues.slice(0, 4).map(x =>
             `<span class="badge ${x.val === "bad" ? "b-bad" : "b-warn"}">${x.item}: ${x.val === "bad" ? "개선필요" : "보통"}</span>`
           ).join("");
-      const cpd     = r[14] ? ` · CPD ${r[14]}` : "";
-      const coaching = r[17] || "";
+      const cpd     = r[18] ? ` · CPD ${r[18]}` : "";
+      const coaching = r[21] || "";
       return `
         <div class="hist-item">
           <div class="hist-top">
@@ -499,88 +566,4 @@ async function saveRecord() {
     date:      document.getElementById("f-date").value,
     monitor:   document.getElementById("f-monitor").value,
     calls:     CALL_ITEMS.map((_, i) => ({
-      result: document.getElementById(`r-${i}`).value,
-      detail: document.getElementById(`d-${i}`).value
-    })),
-    post:      { result: document.getElementById("r-post").value, detail: document.getElementById("d-post").value },
-    cpdBefore: document.getElementById("cpd-before").value,
-    cpd2w:     document.getElementById("cpd-2w").value,
-    cpd1m:     document.getElementById("cpd-1m").value,
-    coaching:  document.getElementById("f-coaching").value,
-    feedback:  document.getElementById("f-feedback").value,
-    note:      document.getElementById("f-note").value
-  };
-
-  try {
-    const res    = await fetch(APPS_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
-    const result = await res.json();
-    if (result.status === "ok") {
-      showToast("✅ Google Sheets에 저장되었습니다!", false);
-      await loadHistory();
-      resetForm();
-      switchTab("history", document.querySelectorAll(".tab-btn")[0]);
-    } else {
-      throw new Error(result.message || "저장 실패");
-    }
-  } catch(e) {
-    showToast("❌ 저장에 실패했어요. Apps Script URL을 확인해주세요.", true);
-  }
-
-  btn.disabled = false;
-  text.textContent = "💾 Google Sheets에 저장";
-}
-
-/* ── 유틸 ── */
-function buildCallRows() {
-  document.getElementById("callBody").innerHTML = CALL_ITEMS.map((item, i) => `
-    <tr>
-      <td class="col-item">${item}</td>
-      <td class="col-res"><select class="res-sel ok" id="r-${i}" onchange="styleSelect(this)">
-        <option value="ok">문제없음</option>
-        <option value="warn">보통</option>
-        <option value="bad">개선필요</option>
-      </select></td>
-      <td class="col-det"><input class="det-inp" type="text" id="d-${i}" placeholder="세부 내용"/></td>
-    </tr>`).join("");
-}
-
-function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
-
-function setToday() {
-  const el = document.getElementById("f-date");
-  if (el) el.value = new Date().toISOString().split("T")[0];
-}
-
-function resetForm() {
-  setToday();
-  document.getElementById("f-monitor").value = "";
-  CALL_ITEMS.forEach((_, i) => {
-    const s = document.getElementById("r-" + i);
-    if (s) { s.value = "ok"; s.className = "res-sel ok"; }
-    const d = document.getElementById("d-" + i);
-    if (d) d.value = "";
-  });
-  const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
-  const dp = document.getElementById("d-post"); if (dp) dp.value = "";
-  ["cpd-before","cpd-2w","cpd-1m","f-coaching","f-feedback","f-note"].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = "";
-  });
-}
-
-function switchTab(id, btn) {
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("tab-" + id).classList.add("active");
-}
-
-function showToast(msg, isErr) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className   = "toast " + (isErr ? "err" : "ok");
-  t.style.display = "flex";
-  setTimeout(() => { t.style.display = "none"; }, 3500);
-}
-</script>
-</body>
-</html>
+      resu
