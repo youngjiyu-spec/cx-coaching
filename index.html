@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>상담사 모니터링·코칭 관리 | CX팀 아이샵케어</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ⚙️  여기만 수정하세요
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+const SHEET_ID       = "YOUR_GOOGLE_SHEET_ID";        // Sheets URL /d/여기/edit
+const API_KEY        = "YOUR_GOOGLE_API_KEY";          // Google Cloud Console API Key
+const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // Apps Script 배포 URL
+</script>
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<style>
+:root {
+  --bl:#2563EB; --bld:#1d4ed8; --bll:#EFF6FF; --blb:#BFDBFE;
+  --gn:#ECFDF5; --gnt:#065F46; --gnb:#A7F3D0;
+  --wn:#FFFBEB; --wnt:#92400E; --wnb:#FCD34D;
+  --rd:#FEF2F2; --rdt:#991B1B; --rdb:#FCA5A5;
+  --bg:#F8FAFC; --card:#fff;  --br:#E2E8F0;
+  --tx:#0F172A; --mt:#64748B;
+  --r:14px; --rsm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px;line-height:1.6;}
+.hidden{display:none!important;}
+
+/* ── 로딩 ── */
+#loadingScreen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1rem;
+}
+.spinner{width:38px;height:38px;border:3px solid var(--blb);border-top-color:var(--bl);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:14px;color:var(--mt);}
+
+/* ── 팀원 선택 화면 ── */
+#selectScreen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2rem;
+  background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);
+  padding:2.5rem 1rem;
+}
+.brand{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
+.brand-mark{width:60px;height:60px;background:var(--bl);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;}
+.brand-name{font-size:22px;font-weight:700;color:var(--tx);letter-spacing:-.03em;}
+.brand-sub{font-size:14px;color:var(--mt);}
+
+.sel-card{
+  background:var(--card);border:1px solid var(--br);border-radius:var(--r);
+  padding:2rem 2.25rem;width:100%;max-width:480px;
+  box-shadow:0 4px 24px rgba(0,0,0,.06);
+}
+.sel-title{font-size:16px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.sel-sub{font-size:13px;color:var(--mt);margin-bottom:1.75rem;}
+
+/* 스쿼드 그룹 */
+.squad-section{margin-bottom:1.5rem;}
+.squad-section:last-child{margin-bottom:0;}
+.squad-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.squad-label{
+  font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;
+  letter-spacing:.07em;background:var(--bll);border:1px solid var(--blb);
+  padding:4px 12px;border-radius:999px;white-space:nowrap;
+}
+.squad-line{flex:1;height:1px;background:var(--br);}
+.squad-count{font-size:11px;color:var(--mt);white-space:nowrap;}
+
+.member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.member-btn{
+  padding:14px 8px;border:1.5px solid var(--br);border-radius:var(--rsm);
+  background:var(--card);color:var(--tx);font-size:13px;font-weight:500;
+  cursor:pointer;text-align:center;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  font-family:inherit;
+}
+.member-btn:hover{border-color:var(--bl);background:var(--bll);color:var(--bld);transform:translateY(-1px);box-shadow:0 2px 8px rgba(37,99,235,.1);}
+.member-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bll);color:var(--bld);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;
+}
+.sel-hint{font-size:12px;color:var(--mt);text-align:center;margin-top:1.25rem;}
+.sel-err{font-size:13px;color:var(--rdt);text-align:center;padding:1.5rem;background:var(--rd);border-radius:var(--rsm);border:1px solid var(--rdb);}
+
+/* ── 앱 ── */
+#appScreen{display:none;}
+.topbar{
+  background:var(--bl);height:58px;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(37,99,235,.25);
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-icon{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.topbar-title{color:#fff;font-size:16px;font-weight:700;letter-spacing:-.02em;}
+.topbar-tag{background:rgba(255,255,255,.18);color:rgba(255,255,255,.9);font-size:11px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.25);}
+.back-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:var(--rsm);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;transition:background .15s;}
+.back-btn:hover{background:rgba(255,255,255,.25);}
+
+.page{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+
+/* 팀원 헤더 */
+.member-hero{
+  background:var(--bl);border-radius:var(--r);
+  padding:1.75rem 2rem;margin-bottom:1.25rem;
+  display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
+}
+.hero-avatar{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0;}
+.hero-name{font-size:21px;font-weight:700;color:#fff;letter-spacing:-.03em;}
+.hero-meta{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;display:flex;align-items:center;gap:8px;}
+.hero-squad-badge{background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;padding:2px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);}
+.hero-stats{margin-left:auto;display:flex;gap:24px;}
+.stat{text-align:center;}
+.stat-num{font-size:24px;font-weight:700;color:#fff;}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,.65);margin-top:2px;}
+
+/* 탭 */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:6px;margin-bottom:1.25rem;}
+.tab-btn{flex:1;padding:9px;border:none;border-radius:calc(var(--r) - 4px);background:transparent;color:var(--mt);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:all .15s;}
+.tab-btn.active{background:var(--bl);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3);}
+.tab-btn:hover:not(.active){background:var(--bll);color:var(--bl);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* 카드 */
+.card{background:var(--card);border:1px solid var(--br);border-radius:var(--r);margin-bottom:1.25rem;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.card-head{background:var(--bl);padding:10px 18px;}
+.card-head-title{color:#fff;font-size:14px;font-weight:700;letter-spacing:-.01em;}
+.card-body{padding:1.25rem 1.5rem;}
+
+/* 폼 */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:11px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;}
+.field input,.field select,.field textarea{
+  padding:10px 13px;border:1.5px solid var(--br);border-radius:var(--rsm);
+  font-size:14px;font-family:inherit;background:var(--bg);color:var(--tx);outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:#fff;}
+.field textarea{resize:vertical;min-height:78px;}
+
+/* 모니터링 테이블 */
+.mon-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.mon-table thead th{background:#F1F5F9;padding:9px 14px;font-size:11px;font-weight:700;color:var(--mt);text-align:left;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--br);}
+.mon-table tbody td{padding:11px 14px;border-bottom:1px solid #F1F5F9;font-size:14px;vertical-align:middle;}
+.mon-table tbody tr:last-child td{border-bottom:none;}
+.mon-table tbody tr:hover td{background:#FAFBFF;}
+.col-item{width:37%;font-weight:500;}
+.col-res{width:22%;}
+.col-det{width:41%;}
+
+.res-sel{
+  display:inline-block;padding:5px 26px 5px 12px;border-radius:999px;
+  font-size:13px;font-weight:700;font-family:inherit;border:none;cursor:pointer;outline:none;
+  -webkit-appearance:none;appearance:none;
+  background-repeat:no-repeat;background-position:right 8px center;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  min-width:106px;transition:box-shadow .15s;
+}
+.res-sel:focus{box-shadow:0 0 0 2px rgba(37,99,235,.25);}
+.res-sel.ok  {background-color:var(--gn);color:var(--gnt);}
+.res-sel.warn{background-color:var(--wn);color:var(--wnt);}
+.res-sel.bad {background-color:var(--rd);color:var(--rdt);}
+
+.det-inp{width:100%;padding:7px 11px;border:1.5px solid var(--br);border-radius:var(--rsm);font-size:13px;font-family:inherit;background:#fff;color:var(--tx);outline:none;transition:border-color .15s,box-shadow .15s;}
+.det-inp:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+
+/* CPD */
+.cpd-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:1rem;}
+.cpd-card{background:var(--bll);border:1.5px solid var(--blb);border-radius:var(--rsm);padding:14px;text-align:center;display:flex;flex-direction:column;gap:8px;}
+.cpd-card label{font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;}
+.cpd-card input{padding:10px;border:1.5px solid var(--blb);border-radius:var(--rsm);font-size:18px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;transition:border-color .15s,box-shadow .15s;}
+.cpd-card input:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+
+/* 코칭 기록 */
+.history-empty{text-align:center;padding:3rem 2rem;color:var(--mt);font-size:14px;}
+.hist-item{border:1.5px solid var(--br);border-radius:var(--rsm);padding:14px 16px;margin-bottom:10px;transition:all .15s;}
+.hist-item:hover{border-color:var(--blb);background:var(--bll);}
+.hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.hist-date{font-size:14px;font-weight:700;color:var(--tx);}
+.hist-mon{font-size:12px;color:var(--mt);}
+.hist-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.b-ok  {background:var(--gn);color:var(--gnt);border:1px solid var(--gnb);}
+.b-warn{background:var(--wn);color:var(--wnt);border:1px solid var(--wnb);}
+.b-bad {background:var(--rd);color:var(--rdt);border:1px solid var(--rdb);}
+.hist-note{font-size:12px;color:var(--mt);margin-top:8px;padding-top:8px;border-top:1px solid var(--br);line-height:1.5;}
+
+/* 액션 */
+.action-bar{display:flex;gap:12px;margin-top:1.5rem;}
+.btn-save{flex:1;padding:13px;background:var(--bl);color:#fff;border:none;border-radius:var(--rsm);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-save:hover{background:var(--bld);}
+.btn-save:active{transform:scale(.99);}
+.btn-save:disabled{background:#CBD5E1;cursor:not-allowed;}
+.btn-reset{padding:13px 22px;background:#fff;color:var(--mt);border:1.5px solid var(--br);border-radius:var(--rsm);font-size:14px;font-family:inherit;cursor:pointer;transition:background .15s;}
+.btn-reset:hover{background:var(--bg);}
+.toast{margin-top:1rem;padding:12px 16px;border-radius:var(--rsm);font-size:14px;font-weight:500;display:none;align-items:center;gap:8px;}
+.toast.ok {background:var(--gn);color:var(--gnt);border:1px solid var(--gnb);}
+.toast.err{background:var(--rd);color:var(--rdt);border:1px solid var(--rdb);}
+.dot{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
+
+@media(max-width:600px){
+  .form-grid,.cpd-row{grid-template-columns:1fr;}
+  .topbar{padding:0 1rem;}
+  .topbar-tag{display:none;}
+  .page{padding:1rem 1rem 4rem;}
+  .hero-stats{display:none;}
+  .mon-table .col-det,.mon-table thead th:last-child{display:none;}
+  .member-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- 로딩 -->
+<div id="loadingScreen">
+  <div class="spinner"></div>
+  <div class="loading-text">팀원 목록 불러오는 중...</div>
+</div>
+
+<!-- 팀원 선택 -->
+<div id="selectScreen" class="hidden">
+  <div class="brand">
+    <div class="brand-mark">🎧</div>
+    <div class="brand-name">상담사 모니터링 · 코칭 관리</div>
+    <div class="brand-sub">CX팀 아이샵케어</div>
+  </div>
+  <div class="sel-card">
+    <div class="sel-title">👥 팀원을 선택하세요</div>
+    <div class="sel-sub">스쿼드별로 구분돼요. Google Sheets에 추가하면 자동으로 나타나요.</div>
+    <div id="squadWrap"></div>
+    <div class="sel-hint">팀원 선택 시 해당 팀원 전용 코칭 시트로 이동해요</div>
+  </div>
+</div>
+
+<!-- 메인 앱 -->
+<div id="appScreen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-icon">🎧</div>
+      <span class="topbar-title">모니터링 · 코칭</span>
+      <span class="topbar-tag">CX팀 아이샵케어</span>
+    </div>
+    <button class="back-btn" onclick="goSelect()">← 팀원 선택</button>
+  </div>
+
+  <div class="page">
+
+    <!-- 팀원 헤더 -->
+    <div class="member-hero">
+      <div class="hero-avatar" id="heroAv">?</div>
+      <div>
+        <div class="hero-name" id="heroName">-</div>
+        <div class="hero-meta">
+          <span class="hero-squad-badge" id="heroSquad">-</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">총 코칭</div></div>
+        <div class="stat"><div class="stat-num" id="statCPD">-</div><div class="stat-lbl">최근 CPD</div></div>
+      </div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('history', this)">📂 코칭 기록</button>
+      <button class="tab-btn" onclick="switchTab('new', this)">✏️ 새 코칭 입력</button>
+    </div>
+
+    <!-- 기록 탭 -->
+    <div class="tab-pane active" id="tab-history">
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">📂 코칭 기록</span></div>
+        <div class="card-body"><div id="historyList"><div class="history-empty">아직 코칭 기록이 없어요.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 새 코칭 탭 -->
+    <div class="tab-pane" id="tab-new">
+
+      <!-- 기본 정보 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">👤 기본 정보</span></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field"><label>날짜</label><input type="date" id="f-date"/></div>
+            <div class="field"><label>모니터링 진행자</label><input type="text" id="f-monitor" placeholder="진행자 이름"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 통화 중 모니터링 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">📞 통화 중 모니터링</span></div>
+        <table class="mon-table">
+          <thead><tr><th class="col-item">체크 항목</th><th class="col-res">결과</th><th class="col-det">세부 내용</th></tr></thead>
+          <tbody id="callBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 후처리 모니터링 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">📋 후처리 모니터링</span></div>
+        <table class="mon-table">
+          <thead><tr><th class="col-item">체크 항목</th><th class="col-res">결과</th><th class="col-det">세부 내용</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="col-item">후처리 프로세스 적절성</td>
+              <td class="col-res"><select class="res-sel ok" id="r-post" onchange="styleSelect(this)"><option value="ok">적절</option><option value="warn">보통</option><option value="bad">개선필요</option></select></td>
+              <td class="col-det"><input class="det-inp" type="text" id="d-post" placeholder="세부 내용"/></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 코칭 결과 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
+        <div class="card-body">
+          <div class="cpd-row">
+            <div class="cpd-card"><label>코칭 전 기준</label><input type="text" id="cpd-before" placeholder="4.2"/></div>
+            <div class="cpd-card"><label>2주 후</label><input type="text" id="cpd-2w" placeholder="4.5"/></div>
+            <div class="cpd-card"><label>1개월 후</label><input type="text" id="cpd-1m" placeholder="4.7"/></div>
+          </div>
+          <div style="display:grid;gap:14px;">
+            <div class="field"><label>코칭 내용</label><textarea id="f-coaching" placeholder="코칭 내용을 상세히 입력하세요"></textarea></div>
+            <div class="field"><label>추후 피드백 예정</label><textarea id="f-feedback" placeholder="추후 피드백 예정 내용" style="min-height:62px;"></textarea></div>
+            <div class="field"><label>비고</label><textarea id="f-note" placeholder="기타 메모사항" style="min-height:58px;"></textarea></div>
+          </div>
+          <div class="action-bar">
+            <button class="btn-save" id="saveBtn" onclick="saveRecord()">
+              <span id="saveBtnText">💾 Google Sheets에 저장</span>
+            </button>
+            <button class="btn-reset" onclick="resetForm()">↺ 초기화</button>
+          </div>
+          <div class="toast" id="toast"></div>
+        </div>
+      </div>
+
+    </div><!-- /tab-new -->
+  </div><!-- /page -->
+</div><!-- /appScreen -->
+
+<script>
+const CALL_ITEMS = [
+  "오프닝 구간 적절성",
+  "경청 태도",
+  "니즈 파악 정확도",
+  "응대 중 공백 구간 발생",
+  "결론 중심 응대 여부",
+  "클로징 멘트 적절성"
+];
+
+let currentMember = null;
+let allMembers    = [];
+
+/* ── 초기화 ── */
+window.addEventListener("DOMContentLoaded", async () => {
+  buildCallRows();
+  setToday();
+  await loadMembers();
+  showSelect();
+});
+
+/* ── 팀원 목록 로드 (Google Sheets) ── */
+async function loadMembers() {
+  try {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/팀원목록!A2:C100?key=${API_KEY}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    allMembers = (data.values || [])
+      .map(r => ({ name:(r[0]||"").trim(), squad:(r[1]||"").trim() }))
+      .filter(m => m.name);
+  } catch(e) {
+    allMembers = [];
+  }
+}
+
+/* ── 팀원 선택 화면 렌더 ── */
+function showSelect() {
+  document.getElementById("loadingScreen").classList.add("hidden");
+  document.getElementById("selectScreen").classList.remove("hidden");
+
+  const wrap = document.getElementById("squadWrap");
+
+  if (!allMembers.length) {
+    wrap.innerHTML = `<div class="sel-err">⚠️ 팀원 목록을 불러올 수 없어요.<br><small style="opacity:.8;">SHEET_ID · API_KEY 설정을 확인해주세요.</small></div>`;
+    return;
+  }
+
+  /* 스쿼드별 그룹핑 — Sheets 순서 유지 */
+  const squads = [...new Set(allMembers.map(m => m.squad))];
+  wrap.innerHTML = squads.map(sq => {
+    const members = allMembers.filter(m => m.squad === sq);
+    return `
+      <div class="squad-section">
+        <div class="squad-header">
+          <span class="squad-label">${sq}</span>
+          <div class="squad-line"></div>
+          <span class="squad-count">${members.length}명</span>
+        </div>
+        <div class="member-grid">
+          ${members.map(m => `
+            <button class="member-btn" onclick="enterMember(allMembers.find(m=>m.name==='${m.name}'))">
+              <div class="member-avatar">${m.name[0]}</div>
+              <span>${m.name}</span>
+            </button>`).join("")}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* ── 팀원 선택 화면으로 돌아가기 ── */
+function goSelect() {
+  document.getElementById("appScreen").style.display = "none";
+  document.getElementById("selectScreen").classList.remove("hidden");
+}
+
+/* ── 팀원 앱 진입 ── */
+async function enterMember(member) {
+  currentMember = member;
+  document.getElementById("selectScreen").classList.add("hidden");
+  document.getElementById("appScreen").style.display = "block";
+
+  document.getElementById("heroAv").textContent    = member.name[0];
+  document.getElementById("heroName").textContent  = member.name;
+  document.getElementById("heroSquad").textContent = member.squad;
+
+  await loadHistory();
+}
+
+/* ── 코칭 기록 로드 ── */
+async function loadHistory() {
+  const list = document.getElementById("historyList");
+  list.innerHTML = `<div class="history-empty">기록 불러오는 중...</div>`;
+
+  try {
+    const url  = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/코칭기록!A2:X1000?key=${API_KEY}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    const rows = (data.values || []).filter(r => (r[0]||"").trim() === currentMember.name);
+
+    document.getElementById("statCount").textContent = rows.length;
+
+    if (!rows.length) {
+      list.innerHTML = `<div class="history-empty">아직 코칭 기록이 없어요 😊<br><small style="color:#94a3b8;">새 코칭 입력 탭에서 첫 코칭을 등록해보세요.</small></div>`;
+      return;
+    }
+
+    rows.sort((a, b) => (b[1] || "").localeCompare(a[1] || ""));
+    if (rows[0][16]) document.getElementById("statCPD").textContent = rows[0][16];
+
+    list.innerHTML = rows.map(r => {
+      const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[3 + i * 2] || "ok" })).filter(x => x.val !== "ok");
+      const badges = issues.length === 0
+        ? `<span class="badge b-ok">✅ 전체 문제없음</span>`
+        : issues.slice(0, 4).map(x =>
+            `<span class="badge ${x.val === "bad" ? "b-bad" : "b-warn"}">${x.item}: ${x.val === "bad" ? "개선필요" : "보통"}</span>`
+          ).join("");
+      const cpd     = r[14] ? ` · CPD ${r[14]}` : "";
+      const coaching = r[17] || "";
+      return `
+        <div class="hist-item">
+          <div class="hist-top">
+            <span class="hist-date">📅 ${r[1] || "-"}</span>
+            <span class="hist-mon">진행자: ${r[2] || "-"}${cpd}</span>
+          </div>
+          <div class="hist-badges">${badges}</div>
+          ${coaching ? `<div class="hist-note">💬 ${coaching.length > 80 ? coaching.slice(0, 80) + "…" : coaching}</div>` : ""}
+        </div>`;
+    }).join("");
+
+  } catch(e) {
+    list.innerHTML = `<div class="history-empty" style="color:var(--rdt);">기록을 불러올 수 없어요.</div>`;
+  }
+}
+
+/* ── 저장 (Apps Script) ── */
+async function saveRecord() {
+  if (!currentMember) return;
+  const btn  = document.getElementById("saveBtn");
+  const text = document.getElementById("saveBtnText");
+  btn.disabled = true;
+  text.innerHTML = `<div class="dot"></div> 저장 중...`;
+
+  const payload = {
+    member:    currentMember.name,
+    squad:     currentMember.squad,
+    date:      document.getElementById("f-date").value,
+    monitor:   document.getElementById("f-monitor").value,
+    calls:     CALL_ITEMS.map((_, i) => ({
+      result: document.getElementById(`r-${i}`).value,
+      detail: document.getElementById(`d-${i}`).value
+    })),
+    post:      { result: document.getElementById("r-post").value, detail: document.getElementById("d-post").value },
+    cpdBefore: document.getElementById("cpd-before").value,
+    cpd2w:     document.getElementById("cpd-2w").value,
+    cpd1m:     document.getElementById("cpd-1m").value,
+    coaching:  document.getElementById("f-coaching").value,
+    feedback:  document.getElementById("f-feedback").value,
+    note:      document.getElementById("f-note").value
+  };
+
+  try {
+    const res    = await fetch(APPS_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (result.status === "ok") {
+      showToast("✅ Google Sheets에 저장되었습니다!", false);
+      await loadHistory();
+      resetForm();
+      switchTab("history", document.querySelectorAll(".tab-btn")[0]);
+    } else {
+      throw new Error(result.message || "저장 실패");
+    }
+  } catch(e) {
+    showToast("❌ 저장에 실패했어요. Apps Script URL을 확인해주세요.", true);
+  }
+
+  btn.disabled = false;
+  text.textContent = "💾 Google Sheets에 저장";
+}
+
+/* ── 유틸 ── */
+function buildCallRows() {
+  document.getElementById("callBody").innerHTML = CALL_ITEMS.map((item, i) => `
+    <tr>
+      <td class="col-item">${item}</td>
+      <td class="col-res"><select class="res-sel ok" id="r-${i}" onchange="styleSelect(this)">
+        <option value="ok">문제없음</option>
+        <option value="warn">보통</option>
+        <option value="bad">개선필요</option>
+      </select></td>
+      <td class="col-det"><input class="det-inp" type="text" id="d-${i}" placeholder="세부 내용"/></td>
+    </tr>`).join("");
+}
+
+function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
+
+function setToday() {
+  const el = document.getElementById("f-date");
+  if (el) el.value = new Date().toISOString().split("T")[0];
+}
+
+function resetForm() {
+  setToday();
+  document.getElementById("f-monitor").value = "";
+  CALL_ITEMS.forEach((_, i) => {
+    const s = document.getElementById("r-" + i);
+    if (s) { s.value = "ok"; s.className = "res-sel ok"; }
+    const d = document.getElementById("d-" + i);
+    if (d) d.value = "";
+  });
+  const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
+  const dp = document.getElementById("d-post"); if (dp) dp.value = "";
+  ["cpd-before","cpd-2w","cpd-1m","f-coaching","f-feedback","f-note"].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = "";
+  });
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-" + id).classList.add("active");
+}
+
+function showToast(msg, isErr) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className   = "toast " + (isErr ? "err" : "ok");
+  t.style.display = "flex";
+  setTimeout(() => { t.style.display = "none"; }, 3500);
+}
+</script>
+</body>
+</html>
