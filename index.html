@@ -188,7 +188,33 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
 /* 코칭 기록 */
 .history-empty{text-align:center;padding:3rem 2rem;color:var(--mt);font-size:14px;}
-.hist-item{border:1.5px solid var(--br);border-radius:var(--rsm);padding:14px 16px;margin-bottom:10px;transition:all .15s;}
+.hist-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.hist-header:hover{background:#FAFBFF;}
+.hist-left{display:flex;flex-direction:column;gap:6px;flex:1;}
+.hist-chevron{font-size:18px;color:var(--mt);transition:transform .2s;flex-shrink:0;line-height:1;}
+.hist-chevron.open{transform:rotate(180deg);}
+.hist-detail{display:none;border-top:1px solid var(--br);background:#FAFBFF;padding:14px 16px;}
+.hist-detail.open{display:block;}
+.detail-section{margin-bottom:14px;}
+.detail-section:last-child{margin-bottom:0;}
+.detail-label{font-size:11px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.detail-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.detail-table td{padding:6px 10px;font-size:13px;border-bottom:1px solid var(--br);}
+.detail-table tr:last-child td{border-bottom:none;}
+.detail-table .dt-item{color:var(--mt);width:38%;}
+.detail-result{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;}
+.dr-ok{background:var(--gn);color:var(--gnt);}
+.dr-warn{background:var(--wn);color:var(--wnt);}
+.dr-bad{background:var(--rd);color:var(--rdt);}
+.detail-text{font-size:13px;color:var(--tx);line-height:1.6;background:var(--card);border:1px solid var(--br);border-radius:var(--rsm);padding:10px 12px;}
+.cpd-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.cpd-s-card{background:var(--bll);border:1px solid var(--blb);border-radius:var(--rsm);padding:10px;text-align:center;}
+.cpd-s-lbl{font-size:10px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.cpd-s-val{font-size:18px;font-weight:700;color:var(--bld);}
+.cpd-s-chg{font-size:11px;font-weight:700;margin-top:3px;}
+.chg-up{color:var(--gnt);}
+.chg-dn{color:var(--rdt);}
+.hist-item{border:1.5px solid var(--br);border-radius:var(--rsm);margin-bottom:10px;overflow:hidden;transition:all .15s;}
 .hist-item:hover{border-color:var(--blb);background:var(--bll);}
 .hist-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .hist-date{font-size:14px;font-weight:700;color:var(--tx);}
@@ -234,7 +260,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
 
 <!-- 암호 화면 -->
-<div id="lockScreen" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);padding:2rem;">
+<div id="lockScreen" style="min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2rem;background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);padding:2rem;">
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
     <div style="width:60px;height:60px;background:#2563EB;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;">🎧</div>
     <div style="font-size:22px;font-weight:700;color:#0F172A;letter-spacing:-.03em;">상담사 모니터링 · 코칭 관리</div>
@@ -355,24 +381,27 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         <div class="card-body">
           <div class="cpd-row">
             <div class="cpd-card">
-              <div>
-                <label>코칭 전 기준 (콜량)</label>
-                <input type="text" id="cpd-before" placeholder="예: 4.2" oninput="calcCPD()"/>
+              <label>평균 CPD</label>
+              <input type="date" id="cpd-date-before" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
+              <input type="text" id="cpd-before" placeholder="예: 48" oninput="calcCPD()"/>
+              <div class="cpd-change-area" style="min-height:8px;"></div>
+            </div>
+            <div class="cpd-card">
+              <label>2주 후 CPD</label>
+              <input type="date" id="cpd-date-2w" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
+              <input type="text" id="cpd-2w" placeholder="예: 58" oninput="calcCPD()"/>
+              <div class="cpd-change-area">
+                <span class="cpd-change none" id="change-2w-before">코칭 전 대비 -</span>
               </div>
             </div>
             <div class="cpd-card">
-              <div>
-                <label>2주 후 (콜량)</label>
-                <input type="text" id="cpd-2w" placeholder="예: 4.5" oninput="calcCPD()"/>
+              <label>1개월 후 CPD</label>
+              <input type="date" id="cpd-date-1m" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
+              <input type="text" id="cpd-1m" placeholder="예: 50" oninput="calcCPD()"/>
+              <div class="cpd-change-area">
+                <span class="cpd-change none" id="change-1m-before">코칭 전 대비 -</span>
+                <span class="cpd-change none" id="change-1m-2w">2주 후 대비 -</span>
               </div>
-              <span class="cpd-change none" id="change-2w">-</span>
-            </div>
-            <div class="cpd-card">
-              <div>
-                <label>1개월 후 (콜량)</label>
-                <input type="text" id="cpd-1m" placeholder="예: 4.7" oninput="calcCPD()"/>
-              </div>
-              <span class="cpd-change none" id="change-1m">-</span>
             </div>
           </div>
           <div style="display:grid;gap:14px;">
@@ -527,23 +556,88 @@ async function loadHistory() {
     rows.sort((a, b) => (b[1] || "").localeCompare(a[1] || ""));
     if (rows[0][18]) document.getElementById("statCPD").textContent = rows[0][18];
 
-    list.innerHTML = rows.map(r => {
+    list.innerHTML = rows.map((r, idx) => {
       const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[3 + i * 2] || "ok" })).filter(x => x.val !== "ok");
       const badges = issues.length === 0
         ? `<span class="badge b-ok">✅ 전체 문제없음</span>`
         : issues.slice(0, 4).map(x =>
             `<span class="badge ${x.val === "bad" ? "b-bad" : "b-warn"}">${x.item}: ${x.val === "bad" ? "개선필요" : "보통"}</span>`
           ).join("");
-      const cpd     = r[18] ? ` · CPD ${r[18]}` : "";
-      const coaching = r[21] || "";
+
+      // 상세 — 통화 모니터링 행
+      const callRows = CALL_ITEMS.map((item, i) => {
+        const res = r[3 + i * 2] || "ok";
+        const det = r[4 + i * 2] || "-";
+        const cls = res === "ok" ? "dr-ok" : res === "warn" ? "dr-warn" : "dr-bad";
+        const lbl = res === "ok" ? "문제없음" : res === "warn" ? "보통" : "개선필요";
+        return `<tr><td class="dt-item">${item}</td><td><span class="detail-result ${cls}">${lbl}</span></td><td style="color:var(--mt);font-size:12px;">${det}</td></tr>`;
+      }).join("");
+
+      const postRes = r[16] || "ok";
+      const postDet = r[17] || "-";
+      const postCls = postRes === "ok" ? "dr-ok" : postRes === "warn" ? "dr-warn" : "dr-bad";
+      const postLbl = postRes === "ok" ? "적절" : postRes === "warn" ? "보통" : "개선필요";
+
+      // CPD
+      const cpdb = parseFloat(r[18]);
+      const cpd2 = parseFloat(r[19]);
+      const cpd1 = parseFloat(r[20]);
+      function cpdPct(base, val) {
+        if (isNaN(base) || isNaN(val)) return "";
+        const p = ((val - base) / base * 100).toFixed(1);
+        const up = val >= base;
+        return `<div class="cpd-s-chg ${up ? "chg-up" : "chg-dn"}">${up ? "▲ +" : "▼ "}${p}%</div>`;
+      }
+
+      const coaching  = r[21] || "";
+      const feedback  = r[22] || "";
+      const note      = r[23] || "";
+
       return `
         <div class="hist-item">
-          <div class="hist-top">
-            <span class="hist-date">📅 ${r[1] || "-"}</span>
-            <span class="hist-mon">진행자: ${r[2] || "-"}${cpd}</span>
+          <div class="hist-header" onclick="toggleHist(${idx})">
+            <div class="hist-left">
+              <span class="hist-date">📅 ${r[1] || "-"}</span>
+              <div class="hist-badges">${badges}</div>
+            </div>
+            <span class="hist-chevron" id="chev-${idx}">▾</span>
           </div>
-          <div class="hist-badges">${badges}</div>
-          ${coaching ? `<div class="hist-note">💬 ${coaching.length > 80 ? coaching.slice(0, 80) + "…" : coaching}</div>` : ""}
+          <div class="hist-detail" id="hdet-${idx}">
+            <div class="detail-section">
+              <div class="detail-label">통화 중 모니터링</div>
+              <table class="detail-table">
+                ${callRows}
+                <tr><td class="dt-item">후처리 적절성</td><td><span class="detail-result ${postCls}">${postLbl}</span></td><td style="color:var(--mt);font-size:12px;">${postDet}</td></tr>
+              </table>
+            </div>
+            ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
+            <div class="detail-section">
+              <div class="detail-label">CPD (콜량)</div>
+              <div class="cpd-summary">
+                <div class="cpd-s-card">
+                  <div class="cpd-s-lbl">평균 CPD</div>
+                  ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
+                  <div class="cpd-s-val">${isNaN(cpdb) ? "-" : cpdb}</div>
+                </div>
+                <div class="cpd-s-card">
+                  <div class="cpd-s-lbl">2주 후 CPD</div>
+                  ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
+                  <div class="cpd-s-val">${isNaN(cpd2) ? "-" : cpd2}</div>
+                  ${cpdPct(cpdb, cpd2)}
+                </div>
+                <div class="cpd-s-card">
+                  <div class="cpd-s-lbl">1개월 후 CPD</div>
+                  ${r[27] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[27]}</div>` : ""}
+                  <div class="cpd-s-val">${isNaN(cpd1) ? "-" : cpd1}</div>
+                  ${cpdPct(cpdb, cpd1)}
+                  <div class="cpd-s-chg" style="font-size:10px;color:var(--mt);">2주 후 대비: ${isNaN(cpd2)||isNaN(cpd1)?"-":(((cpd1-cpd2)/cpd2*100)>=0?"▲ +":"▼ ")+(isNaN(cpd2)||isNaN(cpd1)?"":(((cpd1-cpd2)/cpd2*100).toFixed(1))+"%")}</div>
+                </div>
+              </div>
+            </div>` : ""}
+            ${coaching ? `<div class="detail-section"><div class="detail-label">코칭 내용</div><div class="detail-text">${coaching}</div></div>` : ""}
+            ${feedback ? `<div class="detail-section"><div class="detail-label">추후 피드백 예정</div><div class="detail-text">${feedback}</div></div>` : ""}
+            ${note ? `<div class="detail-section"><div class="detail-label">비고</div><div class="detail-text">${note}</div></div>` : ""}
+          </div>
         </div>`;
     }).join("");
 
@@ -570,9 +664,12 @@ async function saveRecord() {
       detail: document.getElementById(`d-${i}`).value
     })),
     post:      { result: document.getElementById("r-post").value, detail: document.getElementById("d-post").value },
-    cpdBefore: document.getElementById("cpd-before").value,
-    cpd2w:     document.getElementById("cpd-2w").value,
-    cpd1m:     document.getElementById("cpd-1m").value,
+    cpdBefore:     document.getElementById("cpd-before").value,
+    cpd2w:         document.getElementById("cpd-2w").value,
+    cpd1m:         document.getElementById("cpd-1m").value,
+    cpdDateBefore: document.getElementById("cpd-date-before").value,
+    cpdDate2w:     document.getElementById("cpd-date-2w").value,
+    cpdDate1m:     document.getElementById("cpd-date-1m").value,
     coaching:  document.getElementById("f-coaching").value,
     feedback:  document.getElementById("f-feedback").value,
     note:      document.getElementById("f-note").value
@@ -613,25 +710,33 @@ function buildCallRows() {
 
 function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
 
+function toggleHist(idx) {
+  const det  = document.getElementById("hdet-" + idx);
+  const chev = document.getElementById("chev-" + idx);
+  const open = det.classList.toggle("open");
+  chev.classList.toggle("open", open);
+}
+
 function calcCPD() {
   const before = parseFloat(document.getElementById("cpd-before").value);
   const w2     = parseFloat(document.getElementById("cpd-2w").value);
   const m1     = parseFloat(document.getElementById("cpd-1m").value);
 
-  function setChange(elId, base, val) {
+  function setChange(elId, base, val, label) {
     const el = document.getElementById(elId);
     if (!el) return;
     if (isNaN(base) || isNaN(val)) {
-      el.textContent = "-"; el.className = "cpd-change none"; return;
+      el.textContent = label + " -"; el.className = "cpd-change none"; return;
     }
     const pct = ((val - base) / base * 100).toFixed(1);
     const isUp = val >= base;
-    el.textContent = (isUp ? "▲ +" : "▼ ") + pct + "%";
+    el.textContent = label + " " + (isUp ? "▲ +" : "▼ ") + pct + "%";
     el.className = "cpd-change " + (isUp ? "up" : "down");
   }
 
-  setChange("change-2w", before, w2);
-  setChange("change-1m", before, m1);
+  setChange("change-2w-before",  before, w2, "코칭 전 대비");
+  setChange("change-1m-before",  before, m1, "코칭 전 대비");
+  setChange("change-1m-2w",      w2,     m1, "2주 후 대비");
 }
 
 function setToday() {
@@ -650,7 +755,7 @@ function resetForm() {
   });
   const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
   const dp = document.getElementById("d-post"); if (dp) dp.value = "";
-  ["cpd-before","cpd-2w","cpd-1m","f-coaching","f-feedback","f-note"].forEach(id => {
+  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before","cpd-date-2w","cpd-date-1m","f-coaching","f-feedback","f-note"].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = "";
   });
 }
