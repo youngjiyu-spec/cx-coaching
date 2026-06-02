@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHYqLuxjOqlz57ySKAaVbhj5CtO-MzgYYNJaE5u8BmcFb5j8Y4DwdSaah_ASinYgS2/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBN6skPhRL_KRvYr1I8cmcpBEOE_4xATjqneLNkRzVWIs987BxQKEEv8gGNMTI7MbB/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -756,6 +756,7 @@ async function loadHistory() {
         return `<div class="cpd-s-chg ${up ? "chg-up" : "chg-dn"}">${up ? "▲ +" : "▼ "}${p}%</div>`;
       }
 
+      const dailyCalls = r[28] || "";
       const coaching  = r[21] || "";
       const feedback  = r[22] || "";
       const note      = r[23] || "";
@@ -784,7 +785,8 @@ async function loadHistory() {
                   <tr><td class="dt-item">후처리 적절성</td><td><span class="detail-result ${postCls}">${postLbl}</span></td><td style="color:var(--mt);font-size:12px;">${postDet}</td></tr>
                 </table>
               </div>
-              ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
+              ${dailyCalls ? `<div class="detail-section"><div class="detail-label">📊 금일 콜 수</div><div style="font-size:18px;font-weight:700;color:var(--bld);padding:6px 0;">${dailyCalls} 콜</div></div>` : ""}
+            ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
               <div class="detail-section">
                 <div class="detail-label">CPD (콜량)</div>
                 <div class="cpd-summary">
