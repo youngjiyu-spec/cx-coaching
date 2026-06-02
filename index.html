@@ -38,6 +38,39 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   align-items:center;justify-content:center;gap:1rem;
 }
 .spinner{width:38px;height:38px;border:3px solid var(--blb);border-top-color:var(--bl);border-radius:50%;animation:spin .8s linear infinite;}
+
+/* 금일 콜수 */
+.daily-box{background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px 16px;}
+.daily-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px;}
+.daily-card{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.daily-day{font-size:10px;font-weight:700;color:var(--mt);text-align:center;}
+.daily-date{font-size:10px;color:var(--mt);text-align:center;}
+.daily-inp{width:100%;padding:7px 4px;border:1.5px solid var(--blb);border-radius:7px;font-size:14px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;}
+.daily-inp:focus{border-color:var(--bl);box-shadow:0 0 0 2px rgba(37,99,235,.1);}
+.daily-inp.today{border-color:var(--bl);}
+.daily-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--blb);}
+.daily-total-lbl{font-size:12px;color:var(--mt);}
+.daily-total-val{font-size:14px;font-weight:700;color:var(--bld);}
+.daily-avg{font-size:12px;color:var(--mt);}
+
+/* 수정 버튼 & 수정 모드 */
+.hist-action-bar{display:flex;justify-content:flex-end;padding:8px 16px 0;}
+.btn-edit{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fff;border:1.5px solid var(--blb);border-radius:7px;color:var(--bld);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;}
+.btn-edit:hover{background:var(--bll);}
+.edit-mode{display:none;border-top:2px solid var(--bl);background:#fff;}
+.edit-mode.open{display:block;}
+.edit-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--br);background:var(--bll);}
+.edit-header-title{font-size:13px;font-weight:700;color:var(--bld);}
+.edit-btns{display:flex;gap:8px;}
+.btn-edit-cancel{padding:5px 12px;background:#fff;border:1.5px solid var(--br);border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;color:var(--mt);cursor:pointer;}
+.btn-edit-save{padding:5px 12px;background:var(--bl);border:none;border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;color:#fff;cursor:pointer;}
+.btn-edit-save:hover{background:var(--bld);}
+.edit-body{padding:14px 16px;display:grid;gap:14px;}
+.edit-tbl{width:100%;border-collapse:collapse;table-layout:fixed;}
+.edit-tbl th{background:#F1F5F9;padding:7px 10px;font-size:10px;font-weight:700;color:var(--mt);text-align:left;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--br);}
+.edit-tbl td{padding:7px 10px;border-bottom:1px solid #F1F5F9;font-size:13px;vertical-align:middle;}
+.edit-tbl tr:last-child td{border-bottom:none;}
+.edit-inp{width:100%;padding:5px 8px;border:1.5px solid var(--br);border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:var(--tx);outline:none;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{font-size:14px;color:var(--mt);}
 
@@ -234,6 +267,35 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .btn-save:disabled{background:#CBD5E1;cursor:not-allowed;}
 .btn-reset{padding:13px 22px;background:#fff;color:var(--mt);border:1.5px solid var(--br);border-radius:var(--rsm);font-size:14px;font-family:inherit;cursor:pointer;transition:background .15s;}
 .btn-reset:hover{background:var(--bg);}
+/* 슬림 에디터 툴바 */
+.tb{display:flex;align-items:center;gap:1px;flex-wrap:nowrap;padding:0 4px;border-bottom:1px solid var(--br);background:#FAFAFA;max-height:0;overflow:hidden;opacity:0;transition:max-height .18s ease,opacity .15s ease,padding .18s ease;}
+.editor-wrap:focus-within .tb{max-height:28px;opacity:1;padding:2px 4px;}
+.editor-wrap{border:1.5px solid var(--br);border-radius:var(--rsm);background:#fff;transition:border-color .15s,box-shadow .15s;}
+.editor-wrap:focus-within{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.tb-b{width:20px;height:20px;border:none;border-radius:3px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mt);flex-shrink:0;padding:0;}
+.tb-b:hover{background:var(--br);color:var(--tx);}
+.tb-b svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.tb-bold{font-weight:700;font-family:Georgia,serif;}
+.tb-ital{font-style:italic;font-family:Georgia,serif;}
+.tb-und{text-decoration:underline;font-size:10px;}
+.tb-str{text-decoration:line-through;font-size:10px;}
+.tb-sep{width:1px;height:12px;background:var(--br);margin:0 2px;flex-shrink:0;}
+
+.cw{position:relative;flex-shrink:0;}
+.ct{width:20px;height:20px;border:none;border-radius:3px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;}
+.ct:hover{background:var(--br);}
+.ct-a{font-size:11px;font-weight:700;color:var(--tx);line-height:1;}
+.ct-bar{width:11px;height:2px;border-radius:1px;}
+.pal{display:none;position:absolute;top:24px;left:0;background:#fff;border:1px solid var(--br);border-radius:8px;padding:7px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:300;width:142px;}
+.pal.show{display:block;}
+.pal-title{font-size:9px;color:var(--mt);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cd{width:15px;height:15px;border-radius:3px;cursor:pointer;border:1.5px solid transparent;transition:transform .1s;}
+.cd:hover{transform:scale(1.2);border-color:rgba(0,0,0,.2);}
+.ea{min-height:78px;padding:8px 11px;outline:none;font-size:14px;line-height:1.75;color:var(--tx);font-family:inherit;}
+.ea:empty::before{content:attr(data-ph);color:#CBD5E1;pointer-events:none;}
+.ea ul{padding-left:1.2em;list-style:disc;}
+.ea ol{padding-left:1.2em;list-style:decimal;}
 .toast{margin-top:1rem;padding:12px 16px;border-radius:var(--rsm);font-size:14px;font-weight:500;display:none;align-items:center;gap:8px;}
 .toast.ok {background:var(--gn);color:var(--gnt);border:1px solid var(--gnb);}
 .toast.err{background:var(--rd);color:var(--rdt);border:1px solid var(--rdb);}
@@ -360,6 +422,22 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         </div>
       </div>
 
+      <!-- 금일 콜 수 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">📊 금일 콜 수</span></div>
+        <div class="card-body">
+          <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-size:12px;font-weight:700;color:var(--bld);" id="todayDayLabel">-요일</span>
+              <span style="font-size:11px;color:var(--mt);" id="todayDateLabel">-</span>
+            </div>
+            <input type="number" id="dailyCall" min="0" placeholder="0"
+              style="width:90px;padding:10px;border:1.5px solid var(--blb);border-radius:8px;font-size:22px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
+            <span style="font-size:13px;color:var(--mt);">콜</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 통화 중 모니터링 -->
       <div class="card">
         <div class="card-head"><span class="card-head-title">📞 통화 중 모니터링</span></div>
@@ -386,7 +464,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
       <!-- 코칭 결과 -->
       <div class="card">
-        <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
+        <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;"><span class="card-head-title">📈 코칭 결과 (CPD)</span><div style="display:flex;align-items:center;gap:8px;"><div id="draftBadge" style="display:none;align-items:center;gap:5px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;cursor:pointer;" onclick="loadDraft()">📋 임시저장 불러오기</div><button onclick="saveDraft()" style="display:flex;align-items:center;gap:5px;padding:4px 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);border-radius:7px;color:#fff;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;">💾 임시저장</button></div></div>
         <div class="card-body">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;">
 
@@ -426,15 +504,18 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
           </div>
           <div style="display:grid;gap:14px;">
-            <div class="field"><label>코칭 내용</label><textarea id="f-coaching" placeholder="코칭 내용을 상세히 입력하세요"></textarea></div>
-            <div class="field"><label>추후 피드백 예정</label><textarea id="f-feedback" placeholder="추후 피드백 예정 내용" style="min-height:62px;"></textarea></div>
-            <div class="field"><label>비고</label><textarea id="f-note" placeholder="기타 메모사항" style="min-height:58px;"></textarea></div>
+            <div class="field"><label>코칭 내용</label>
+              <div class="editor-wrap"><div class="tb" id="tb-coaching"></div><div class="ea" id="f-coaching" contenteditable="true" data-ph="코칭 내용을 입력하세요"></div></div></div>
+            <div class="field"><label>추후 피드백 예정</label>
+              <div class="editor-wrap"><div class="tb" id="tb-feedback"></div><div class="ea" id="f-feedback" contenteditable="true" data-ph="추후 피드백 예정 내용"></div></div></div>
+            <div class="field"><label>비고</label><div class="editor-wrap"><div class="tb" id="tb-note"></div><div class="ea" id="f-note" contenteditable="true" data-ph="기타 메모사항"></div></div></div>
           </div>
           <div class="action-bar">
             <button class="btn-save" id="saveBtn" onclick="saveRecord()">
               <span id="saveBtnText">💾 Google Sheets에 저장</span>
             </button>
             <button class="btn-reset" onclick="resetForm()">↺ 초기화</button>
+            <button class="btn-reset" onclick="clearDraft()" style="font-size:12px;">🗑 임시저장 삭제</button>
           </div>
           <div class="toast" id="toast"></div>
         </div>
@@ -475,6 +556,8 @@ let allMembers    = [];
 async function initAfterAuth() {
   buildCallRows();
   setToday();
+  buildDailyGrid();
+  initEditors();
   await loadMembers();
   showSelect();
 }
@@ -552,6 +635,7 @@ async function enterMember(member) {
   document.getElementById("heroSquad").textContent = member.squad;
 
   await loadHistory();
+  checkDraft();
 }
 
 /* ── 코칭 기록 로드 ── */
@@ -572,11 +656,11 @@ async function loadHistory() {
       return;
     }
 
-    rows.sort((a, b) => (b[1] || "").localeCompare(a[1] || ""));
+    rows.sort((a, b) => (b[2] || "").localeCompare(a[2] || ""));
     if (rows[0][18]) document.getElementById("statCPD").textContent = rows[0][18];
 
     list.innerHTML = rows.map((r, idx) => {
-      const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[3 + i * 2] || "ok" })).filter(x => x.val !== "ok");
+      const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[4 + i * 2] || "ok" })).filter(x => x.val !== "ok");
       const badges = issues.length === 0
         ? `<span class="badge b-ok">✅ 전체 문제없음</span>`
         : issues.slice(0, 4).map(x =>
@@ -585,15 +669,17 @@ async function loadHistory() {
 
       // 상세 — 통화 모니터링 행
       const callRows = CALL_ITEMS.map((item, i) => {
-        const res = r[3 + i * 2] || "ok";
-        const det = r[4 + i * 2] || "-";
+        const res = r[4 + i * 2] || "ok";
+        const detRaw = r[5 + i * 2] || "";
+        const det = detRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
         const cls = res === "ok" ? "dr-ok" : res === "warn" ? "dr-warn" : "dr-bad";
         const lbl = res === "ok" ? "문제없음" : res === "warn" ? "보통" : "개선필요";
         return `<tr><td class="dt-item">${item}</td><td><span class="detail-result ${cls}">${lbl}</span></td><td style="color:var(--mt);font-size:12px;">${det}</td></tr>`;
       }).join("");
 
       const postRes = r[16] || "ok";
-      const postDet = r[17] || "-";
+      const postDetRaw = r[17] || "";
+      const postDet = postDetRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
       const postCls = postRes === "ok" ? "dr-ok" : postRes === "warn" ? "dr-warn" : "dr-bad";
       const postLbl = postRes === "ok" ? "적절" : postRes === "warn" ? "보통" : "개선필요";
 
@@ -613,50 +699,101 @@ async function loadHistory() {
       const note      = r[23] || "";
 
       return `
-        <div class="hist-item-wrap" data-date="${r[1] || ''}">
+        <div class="hist-item-wrap" data-date="${r[2] || ''}">
         <div class="hist-item">
           <div class="hist-header" onclick="toggleHist(${idx})">
             <div class="hist-left">
-              <span class="hist-date">📅 작성일: ${r[1] || "-"}</span>
+              <span class="hist-date">📅 작성일: ${r[2] || "-"}</span>
               <div class="hist-badges">${badges}</div>
             </div>
             <span class="hist-chevron" id="chev-${idx}">▾</span>
           </div>
           <div class="hist-detail" id="hdet-${idx}">
-            <div class="detail-section">
-              <div class="detail-label">통화 중 모니터링</div>
-              <table class="detail-table">
-                ${callRows}
-                <tr><td class="dt-item">후처리 적절성</td><td><span class="detail-result ${postCls}">${postLbl}</span></td><td style="color:var(--mt);font-size:12px;">${postDet}</td></tr>
-              </table>
+            <div class="hist-action-bar">
+              <button class="btn-edit" onclick="openEditMode(${idx}, event)">✏️ 수정</button>
             </div>
-            ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
-            <div class="detail-section">
-              <div class="detail-label">CPD (콜량)</div>
-              <div class="cpd-summary">
-                <div class="cpd-s-card">
-                  <div class="cpd-s-lbl">평균 CPD</div>
-                  ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
-                  <div class="cpd-s-val">${isNaN(cpdb) ? "-" : cpdb}</div>
+            <div class="detail-view" id="dview-${idx}" style="padding:0 16px 16px;">
+              <div class="detail-section">
+                <div class="detail-label">통화 중 모니터링</div>
+                <table class="detail-table">
+                  ${callRows}
+                  <tr><td class="dt-item">후처리 적절성</td><td><span class="detail-result ${postCls}">${postLbl}</span></td><td style="color:var(--mt);font-size:12px;">${postDet}</td></tr>
+                </table>
+              </div>
+              ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
+              <div class="detail-section">
+                <div class="detail-label">CPD (콜량)</div>
+                <div class="cpd-summary">
+                  <div class="cpd-s-card">
+                    <div class="cpd-s-lbl">평균 CPD</div>
+                    ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
+                    <div class="cpd-s-val">${isNaN(cpdb) ? "-" : cpdb}</div>
+                  </div>
+                  <div class="cpd-s-card">
+                    <div class="cpd-s-lbl">2주 후 CPD</div>
+                    ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
+                    <div class="cpd-s-val">${isNaN(cpd2) ? "-" : cpd2}</div>
+                    ${cpdPct(cpdb, cpd2)}
+                  </div>
+                  <div class="cpd-s-card">
+                    <div class="cpd-s-lbl">1개월 후 CPD</div>
+                    ${r[27] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[27]}</div>` : ""}
+                    <div class="cpd-s-val">${isNaN(cpd1) ? "-" : cpd1}</div>
+                    ${cpdPct(cpdb, cpd1)}
+                    <div class="cpd-s-chg" style="font-size:10px;color:var(--mt);">2주 후 대비: ${isNaN(cpd2)||isNaN(cpd1)?"-":(((cpd1-cpd2)/cpd2*100)>=0?"▲ +":"▼ ")+(isNaN(cpd2)||isNaN(cpd1)?"":(((cpd1-cpd2)/cpd2*100).toFixed(1))+"%")}</div>
+                  </div>
                 </div>
-                <div class="cpd-s-card">
-                  <div class="cpd-s-lbl">2주 후 CPD</div>
-                  ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
-                  <div class="cpd-s-val">${isNaN(cpd2) ? "-" : cpd2}</div>
-                  ${cpdPct(cpdb, cpd2)}
-                </div>
-                <div class="cpd-s-card">
-                  <div class="cpd-s-lbl">1개월 후 CPD</div>
-                  ${r[27] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[27]}</div>` : ""}
-                  <div class="cpd-s-val">${isNaN(cpd1) ? "-" : cpd1}</div>
-                  ${cpdPct(cpdb, cpd1)}
-                  <div class="cpd-s-chg" style="font-size:10px;color:var(--mt);">2주 후 대비: ${isNaN(cpd2)||isNaN(cpd1)?"-":(((cpd1-cpd2)/cpd2*100)>=0?"▲ +":"▼ ")+(isNaN(cpd2)||isNaN(cpd1)?"":(((cpd1-cpd2)/cpd2*100).toFixed(1))+"%")}</div>
+              </div>` : ""}
+              ${coaching ? `<div class="detail-section"><div class="detail-label">코칭 내용</div><div class="detail-text" style="white-space:pre-wrap;">${coaching}</div></div>` : ""}
+              ${feedback ? `<div class="detail-section"><div class="detail-label">추후 피드백 예정</div><div class="detail-text" style="white-space:pre-wrap;">${feedback}</div></div>` : ""}
+              ${note ? `<div class="detail-section"><div class="detail-label">비고</div><div class="detail-text" style="white-space:pre-wrap;">${note}</div></div>` : ""}
+            </div>
+            <div class="edit-mode" id="emode-${idx}">
+              <div class="edit-header">
+                <span class="edit-header-title">✏️ 코칭 기록 수정</span>
+                <div class="edit-btns">
+                  <button class="btn-edit-cancel" onclick="closeEditMode(${idx})">취소</button>
+                  <button class="btn-edit-save" onclick="saveEditMode(${idx})">💾 저장</button>
                 </div>
               </div>
-            </div>` : ""}
-            ${coaching ? `<div class="detail-section"><div class="detail-label">코칭 내용</div><div class="detail-text">${coaching}</div></div>` : ""}
-            ${feedback ? `<div class="detail-section"><div class="detail-label">추후 피드백 예정</div><div class="detail-text">${feedback}</div></div>` : ""}
-            ${note ? `<div class="detail-section"><div class="detail-label">비고</div><div class="detail-text">${note}</div></div>` : ""}
+              <div class="edit-body">
+                <div>
+                  <div class="detail-label" style="margin-bottom:8px;">통화 중 모니터링</div>
+                  <table class="edit-tbl">
+                    <thead><tr><th style="width:30%">항목</th><th style="width:22%">결과</th><th>세부 내용</th></tr></thead>
+                    <tbody>
+                      ${CALL_ITEMS.map((item, i) => `<tr>
+                        <td>${item}</td>
+                        <td><select class="res-sel ${r[4+i*2]||'ok'}" id="em-r-${idx}-${i}" onchange="styleSelect(this)">
+                          <option value="ok" ${(r[4+i*2]||'ok')==='ok'?'selected':''}>문제없음</option>
+                          <option value="warn" ${r[4+i*2]==='warn'?'selected':''}>보통</option>
+                          <option value="bad" ${r[4+i*2]==='bad'?'selected':''}>개선필요</option>
+                        </select></td>
+                        <td><input class="edit-inp" type="text" id="em-d-${idx}-${i}" value="${(r[5+i*2]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
+                      </tr>`).join('')}
+                      <tr>
+                        <td>후처리 적절성</td>
+                        <td><select class="res-sel ${r[16]||'ok'}" id="em-post-r-${idx}" onchange="styleSelect(this)">
+                          <option value="ok" ${(r[16]||'ok')==='ok'?'selected':''}>적절</option>
+                          <option value="warn" ${r[16]==='warn'?'selected':''}>보통</option>
+                          <option value="bad" ${r[16]==='bad'?'selected':''}>개선필요</option>
+                        </select></td>
+                        <td><input class="edit-inp" type="text" id="em-post-d-${idx}" value="${(r[17]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="field"><label>코칭 내용</label>
+                  <div class="editor-wrap"><div class="tb" id="em-tb-c-${idx}"></div><div class="ea" id="em-coaching-${idx}" contenteditable="true" data-ph="코칭 내용">${coaching}</div></div>
+                </div>
+                <div class="field"><label>추후 피드백 예정</label>
+                  <div class="editor-wrap"><div class="tb" id="em-tb-f-${idx}"></div><div class="ea" id="em-feedback-${idx}" contenteditable="true" data-ph="추후 피드백 예정 내용">${feedback}</div></div>
+                </div>
+                <div class="field"><label>비고</label>
+                  <div class="editor-wrap"><div class="tb" id="em-tb-n-${idx}"></div><div class="ea" id="em-note-${idx}" contenteditable="true" data-ph="기타 메모사항">${note}</div></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         </div>`;
@@ -691,9 +828,10 @@ async function saveRecord() {
     cpdDateBefore: (document.getElementById("cpd-date-before-s").value && document.getElementById("cpd-date-before-e").value) ? document.getElementById("cpd-date-before-s").value + " ~ " + document.getElementById("cpd-date-before-e").value : document.getElementById("cpd-date-before-s").value || "",
     cpdDate2w:     (document.getElementById("cpd-date-2w-s").value && document.getElementById("cpd-date-2w-e").value) ? document.getElementById("cpd-date-2w-s").value + " ~ " + document.getElementById("cpd-date-2w-e").value : document.getElementById("cpd-date-2w-s").value || "",
     cpdDate1m:     (document.getElementById("cpd-date-1m-s").value && document.getElementById("cpd-date-1m-e").value) ? document.getElementById("cpd-date-1m-s").value + " ~ " + document.getElementById("cpd-date-1m-e").value : document.getElementById("cpd-date-1m-s").value || "",
-    coaching:  document.getElementById("f-coaching").value,
-    feedback:  document.getElementById("f-feedback").value,
-    note:      document.getElementById("f-note").value
+    dailyCalls: document.getElementById("dailyCall")?.value || "",
+    coaching:  document.getElementById("f-coaching").innerText,
+    feedback:  document.getElementById("f-feedback").innerText,
+    note:      document.getElementById("f-note").innerText
   };
 
   try {
@@ -716,6 +854,12 @@ async function saveRecord() {
 }
 
 /* ── 유틸 ── */
+function initEditors() {
+  mkToolbar("tb-coaching","f-coaching");
+  mkToolbar("tb-feedback","f-feedback");
+  mkToolbar("tb-note","f-note");
+}
+
 function buildCallRows() {
   document.getElementById("callBody").innerHTML = CALL_ITEMS.map((item, i) => `
     <tr>
@@ -730,6 +874,86 @@ function buildCallRows() {
 }
 
 function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
+
+/* ── 미니 에디터 툴바 ── */
+const EDITOR_FC = ["#0F172A","#64748B","#E24B4A","#D85A30","#BA7517","#3B6D11","#185FA5","#534AB7","#993556","#065F46","#854F0B","#BFDBFE","#A7F3D0","#FCD34D"];
+const EDITOR_BC = ["#ffffff","#FEF2F2","#FFFBEB","#ECFDF5","#EFF6FF","#F5F3FF","#FDF2F8","#F1F5F9","#FFF7ED","#F0FDF4","#FAFAFA","#E0F2FE","#FCE7F3","#FEF9C3"];
+
+function mkToolbar(tbId, areaId) {
+  const tb = document.getElementById(tbId);
+  if (!tb) return;
+  const uid = tbId.replace(/[^a-z0-9]/gi,"_");
+  tb.innerHTML = `
+    <button class="tb-b tb-bold" onclick="edCmd('bold','${areaId}')" title="굵게">B</button>
+    <button class="tb-b tb-ital" onclick="edCmd('italic','${areaId}')" title="기울임">I</button>
+    <button class="tb-b tb-und"  onclick="edCmd('underline','${areaId}')" title="밑줄">U</button>
+    <button class="tb-b tb-str"  onclick="edCmd('strikeThrough','${areaId}')" title="취소선">S</button>
+    <div class="tb-sep"></div>
+    <div style="display:flex;align-items:center;gap:1px;flex-shrink:0;" title="글자 크기">
+      <button class="tb-b" style="width:18px;font-size:13px;line-height:1;" onclick="adjSz('${uid}_fs','${areaId}',-1)">−</button>
+      <input type="number" id="${uid}_fs" value="16" min="1" max="100"
+        style="width:30px;height:20px;border:1px solid var(--br);border-radius:3px;background:#fff;font-size:11px;color:var(--tx);text-align:center;outline:none;padding:0;font-family:inherit;"
+        onblur="applyPxSize('${uid}_fs','${areaId}')"
+        onkeydown="if(event.key==='Enter')applyPxSize('${uid}_fs','${areaId}')"/>
+      <button class="tb-b" style="width:18px;font-size:13px;line-height:1;" onclick="adjSz('${uid}_fs','${areaId}',1)">+</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="cw">
+      <button class="ct" onclick="togglePal('${uid}_fp')" title="글자 색상">
+        <span class="ct-a" style="color:#E24B4A;">A</span>
+        <div class="ct-bar" id="${uid}_fb" style="background:#E24B4A;"></div>
+      </button>
+      <div class="pal" id="${uid}_fp">
+        <div class="pal-title">글자 색상</div>
+        <div class="cg" id="${uid}_fcg"></div>
+      </div>
+    </div>
+    <div class="cw">
+      <button class="ct" onclick="togglePal('${uid}_bp')" title="배경 색상">
+        <span class="ct-a" style="font-size:9px;background:#FCD34D;padding:0 1px;">ab</span>
+        <div class="ct-bar" id="${uid}_bb" style="background:#FCD34D;"></div>
+      </button>
+      <div class="pal" id="${uid}_bp">
+        <div class="pal-title">배경 색상</div>
+        <div class="cg" id="${uid}_bcg"></div>
+      </div>
+    </div>
+    <div class="tb-sep"></div>
+    <button class="tb-b" onclick="edCmd('insertOrderedList','${areaId}')" title="번호 목록">
+      <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+    </button>
+    <button class="tb-b" onclick="edCmd('insertUnorderedList','${areaId}')" title="글머리 목록">
+      <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>
+    </button>
+    <div class="tb-sep"></div>
+    <button class="tb-b" style="width:auto;padding:0 4px;font-size:11px;" onclick="edIns('${areaId}','• ')" title="• 글머리">•</button>
+  `;
+  const fcg = document.getElementById(`${uid}_fcg`);
+  if (fcg) fcg.innerHTML = EDITOR_FC.map(c=>`<div class="cd" style="background:${c}" onclick="edFC('${uid}','${areaId}','${c}')"></div>`).join("");
+  const bcg = document.getElementById(`${uid}_bcg`);
+  if (bcg) bcg.innerHTML = EDITOR_BC.map(c=>`<div class="cd" style="background:${c};border:1px solid #e2e8f0;" onclick="edBC('${uid}','${areaId}','${c}')"></div>`).join("");
+}
+
+function edCmd(cmd, id) { const el=document.getElementById(id); if(el){el.focus();document.execCommand(cmd,false,null);} }
+function edSize(val, id) { if(!val)return; const el=document.getElementById(id); if(el){el.focus();document.execCommand("fontSize",false,val);} }
+function edIns(id, txt) { const el=document.getElementById(id); if(el){el.focus();document.execCommand("insertText",false,txt);} }
+function edFC(uid, areaId, color) {
+  document.getElementById(`${uid}_fb`).style.background=color;
+  document.getElementById(`${uid}_fp`).classList.remove("show");
+  edCmd("foreColor",areaId); document.getElementById(areaId).focus(); document.execCommand("foreColor",false,color);
+}
+function edBC(uid, areaId, color) {
+  document.getElementById(`${uid}_bb`).style.background=color;
+  document.getElementById(`${uid}_bp`).classList.remove("show");
+  document.getElementById(areaId).focus(); document.execCommand("hiliteColor",false,color);
+}
+function togglePal(id) {
+  document.querySelectorAll(".pal").forEach(p=>{if(p.id!==id)p.classList.remove("show");});
+  document.getElementById(id).classList.toggle("show");
+}
+document.addEventListener("click", e=>{
+  if(!e.target.closest(".cw")) document.querySelectorAll(".pal").forEach(p=>p.classList.remove("show"));
+});
 
 function applyDateFilter() {
   const d = document.getElementById("histDateFilter").value;
@@ -750,6 +974,67 @@ function clearDateFilter() {
   document.getElementById("histDateFilter").value = "";
   document.getElementById("filterBadge").style.display = "none";
   document.querySelectorAll(".hist-item-wrap").forEach(el => { el.style.display = "block"; });
+}
+
+/* 수정 모드 열기 */
+function openEditMode(idx, e) {
+  e.stopPropagation();
+  document.querySelectorAll(".edit-mode").forEach((em,i) => { if(i!==idx) em.classList.remove("open"); });
+  const em = document.getElementById("emode-"+idx);
+  em.classList.toggle("open");
+  if (em.classList.contains("open")) {
+    mkToolbar("em-tb-c-"+idx, "em-coaching-"+idx);
+    mkToolbar("em-tb-f-"+idx, "em-feedback-"+idx);
+    mkToolbar("em-tb-n-"+idx, "em-note-"+idx);
+  }
+}
+
+function closeEditMode(idx) {
+  document.getElementById("emode-"+idx).classList.remove("open");
+}
+
+async function saveEditMode(idx) {
+  const btn = document.querySelector(`#emode-${idx} .btn-edit-save`);
+  btn.textContent = "저장 중...";
+  btn.disabled = true;
+
+  const calls = CALL_ITEMS.map((_,i) => ({
+    result: document.getElementById(`em-r-${idx}-${i}`).value,
+    detail: document.getElementById(`em-d-${idx}-${i}`).value
+  }));
+  const postR = document.getElementById(`em-post-r-${idx}`).value;
+  const postD = document.getElementById(`em-post-d-${idx}`).value;
+  const coaching = document.getElementById(`em-coaching-${idx}`).innerText;
+  const feedback = document.getElementById(`em-feedback-${idx}`).innerText;
+  const note = document.getElementById(`em-note-${idx}`).innerText;
+
+  const rowEl = document.querySelector(`#hdet-${idx}`).closest(".hist-item-wrap");
+  const date = rowEl ? rowEl.dataset.date : "";
+
+  const payload = {
+    action: "update",
+    member: currentMember.name,
+    date: date,
+    rowIndex: idx,
+    calls, post: { result: postR, detail: postD },
+    coaching, feedback, note
+  };
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (result.status === "ok") {
+      showToast("✅ 수정사항이 저장되었습니다!", false);
+      closeEditMode(idx);
+      await loadHistory();
+      document.getElementById("hdet-"+idx)?.classList.add("open");
+      document.getElementById("chev-"+idx)?.classList.add("open");
+    } else { throw new Error(result.message); }
+  } catch(e) {
+    showToast("❌ 저장에 실패했어요.", true);
+  }
+  btn.textContent = "💾 저장";
+  btn.disabled = false;
 }
 
 function toggleHist(idx) {
@@ -781,6 +1066,16 @@ function calcCPD() {
   setChange("change-1m-2w",      w2,     m1, "2주 후 대비");
 }
 
+/* 금일 콜수 */
+function buildDailyGrid() {
+  const today = new Date();
+  const days = ["일","월","화","수","목","금","토"];
+  const dayLabel = document.getElementById("todayDayLabel");
+  const dateLabel = document.getElementById("todayDateLabel");
+  if (dayLabel) dayLabel.textContent = days[today.getDay()] + "요일";
+  if (dateLabel) dateLabel.textContent = today.toISOString().split("T")[0];
+}
+
 function setToday() {
   const el = document.getElementById("f-date");
   if (el) el.value = new Date().toISOString().split("T")[0];
@@ -797,9 +1092,13 @@ function resetForm() {
   });
   const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
   const dp = document.getElementById("d-post"); if (dp) dp.value = "";
-  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before-s","cpd-date-before-e","cpd-date-2w-s","cpd-date-2w-e","cpd-date-1m-s","cpd-date-1m-e","f-coaching","f-feedback","f-note"].forEach(id => {
+  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before-s","cpd-date-before-e","cpd-date-2w-s","cpd-date-2w-e","cpd-date-1m-s","cpd-date-1m-e"].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = "";
   });
+  ["f-coaching","f-feedback","f-note"].forEach(id => {
+    const el = document.getElementById(id); if (el) el.innerText = "";
+  });
+  const dc=document.getElementById("dailyCall");if(dc)dc.value="";
 }
 
 function switchTab(id, btn) {
@@ -807,6 +1106,68 @@ function switchTab(id, btn) {
   document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
   btn.classList.add("active");
   document.getElementById("tab-" + id).classList.add("active");
+}
+
+/* ── 임시저장 ── */
+const DRAFT_KEY = () => "cx_draft_" + (currentMember?.name || "unknown");
+
+function saveDraft() {
+  const draft = {
+    date:      document.getElementById("f-date")?.value || "",
+    monitor:   document.getElementById("f-monitor")?.value || "",
+    coaching:  document.getElementById("f-coaching")?.innerHTML || "",
+    feedback:  document.getElementById("f-feedback")?.innerHTML || "",
+    note:      document.getElementById("f-note")?.innerHTML || "",
+    cpdBefore: document.getElementById("cpd-before")?.value || "",
+    cpd2w:     document.getElementById("cpd-2w")?.value || "",
+    cpd1m:     document.getElementById("cpd-1m")?.value || "",
+    savedAt:   new Date().toLocaleString("ko-KR")
+  };
+  try {
+    localStorage.setItem(DRAFT_KEY(), JSON.stringify(draft));
+    showToast("✅ 임시저장 완료! (" + draft.savedAt + ")", false);
+    checkDraft();
+  } catch(e) {
+    showToast("❌ 임시저장 실패 (저장 공간 부족)", true);
+  }
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY());
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.date)      document.getElementById("f-date").value = d.date;
+    if (d.monitor)   document.getElementById("f-monitor").value = d.monitor;
+    if (d.coaching)  document.getElementById("f-coaching").innerHTML = d.coaching;
+    if (d.feedback)  document.getElementById("f-feedback").innerHTML = d.feedback;
+    if (d.note)      document.getElementById("f-note").innerHTML = d.note;
+    if (d.cpdBefore) document.getElementById("cpd-before").value = d.cpdBefore;
+    if (d.cpd2w)     document.getElementById("cpd-2w").value = d.cpd2w;
+    if (d.cpd1m)     document.getElementById("cpd-1m").value = d.cpd1m;
+    showToast("📋 임시저장 내용을 불러왔어요 (" + d.savedAt + ")", false);
+  } catch(e) {}
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(DRAFT_KEY()); } catch(e) {}
+  checkDraft();
+  showToast("🗑 임시저장이 삭제되었어요.", false);
+}
+
+function checkDraft() {
+  const badge = document.getElementById("draftBadge");
+  if (!badge) return;
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY());
+    if (raw) {
+      const d = JSON.parse(raw);
+      badge.textContent = "📋 임시저장 불러오기 (" + d.savedAt + ")";
+      badge.style.display = "flex";
+    } else {
+      badge.style.display = "none";
+    }
+  } catch(e) { badge.style.display = "none"; }
 }
 
 function showToast(msg, isErr) {
