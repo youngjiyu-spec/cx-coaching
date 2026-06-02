@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJDtL7ubaKW-66tES4KXdnpnN-PnIEdmIsMKYQhEKiBJewL7xDoY-FTgCS-GxqGUUr/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2mQHpMA9UtWvAm2ZZwKdPhCfIa-eOMaOjm4pyO6I_qNtyQUj0CrBKUAzsANGP0P5c/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -57,6 +57,8 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .hist-action-bar{display:flex;justify-content:flex-end;padding:8px 16px 0;}
 .btn-edit{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fff;border:1.5px solid var(--blb);border-radius:7px;color:var(--bld);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;}
 .btn-edit:hover{background:var(--bll);}
+.btn-delete{display:flex;align-items:center;gap:5px;padding:5px 12px;background:#fff;border:1.5px solid var(--rdb);border-radius:7px;color:var(--rdt);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;}
+.btn-delete:hover{background:var(--rd);}
 .edit-mode{display:none;border-top:2px solid var(--bl);background:#fff;}
 .edit-mode.open{display:block;}
 .edit-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--br);background:var(--bll);}
@@ -762,6 +764,7 @@ async function loadHistory() {
           </div>
           <div class="hist-detail" id="hdet-${idx}">
             <div class="hist-action-bar">
+              <button class="btn-delete" onclick="deleteRecord('${ukey}', '${r[2]||''}', ${idx}, event)">🗑 삭제</button>
               <button class="btn-edit" onclick="openEditMode(${idx}, event)">✏️ 수정</button>
             </div>
             <div class="detail-view" id="dview-${idx}" style="padding:0 16px 16px;">
@@ -1027,6 +1030,32 @@ function clearDateFilter() {
   document.getElementById("histDateFilter").value = "";
   document.getElementById("filterBadge").style.display = "none";
   document.querySelectorAll(".hist-item-wrap").forEach(el => { el.style.display = "block"; });
+}
+
+/* 기록 삭제 */
+async function deleteRecord(ukey, date, idx, e) {
+  e.stopPropagation();
+  if (!confirm("이 코칭 기록을 삭제할까요?")) return;
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action:    "delete",
+        uniqueKey: ukey,
+        member:    currentMember.name,
+        date:      date
+      })
+    });
+    const result = await res.json();
+    if (result.status === "ok") {
+      showToast("🗑 코칭 기록이 삭제되었습니다.", false);
+      await loadHistory();
+    } else {
+      throw new Error(result.message);
+    }
+  } catch(e) {
+    showToast("❌ 삭제에 실패했어요.", true);
+  }
 }
 
 /* 수정 모드 열기 */
