@@ -706,7 +706,7 @@ async function loadHistory() {
   list.innerHTML = `<div class="history-empty">기록 불러오는 중...</div>`;
 
   try {
-    const url  = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/코칭기록!A2:X1000?key=${API_KEY}`;
+    const url  = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/코칭기록!A2:AC1000?key=${API_KEY}`;
     const res  = await fetch(url);
     const data = await res.json();
     const rows = (data.values || []).filter(r => (r[0]||"").trim() === currentMember.name);
