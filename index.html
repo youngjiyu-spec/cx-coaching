@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4s-hrBQPkduHy6XYH9Gk4pUJ89lALcqn65fLFOLYqtiKRLrQnODGdAUVHwmn4o_5c/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjHp6ZcZbOI28rzuK9a1cKNGQnX9Rf7mRSSIgp3t9KjNyFHzP6b4ocRagMDG2P2VsP/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -114,7 +114,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   padding:1.75rem 2rem;margin-bottom:1.25rem;
   display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
 }
-.hero-avatar{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;flex-shrink:0;}
+.hero-avatar{display:none;}
 .hero-name{font-size:21px;font-weight:700;color:#fff;letter-spacing:-.03em;}
 .hero-meta{font-size:13px;color:rgba(255,255,255,.75);margin-top:4px;display:flex;align-items:center;gap:8px;}
 .hero-squad-badge{background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;padding:2px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);}
@@ -310,7 +310,6 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
     <!-- 팀원 헤더 -->
     <div class="member-hero">
-      <div class="hero-avatar" id="heroAv">?</div>
       <div>
         <div class="hero-name" id="heroName">-</div>
         <div class="hero-meta">
@@ -319,26 +318,36 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
       </div>
       <div class="hero-stats">
         <div class="stat"><div class="stat-num" id="statCount">0</div><div class="stat-lbl">총 코칭</div></div>
-        <div class="stat"><div class="stat-num" id="statCPD">-</div><div class="stat-lbl">최근 CPD</div></div>
       </div>
     </div>
 
     <!-- 탭 -->
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('history', this)">📂 코칭 기록</button>
-      <button class="tab-btn" onclick="switchTab('new', this)">✏️ 새 코칭 입력</button>
+      <button class="tab-btn active" onclick="switchTab('new', this)">✏️ 새 코칭 입력</button>
+      <button class="tab-btn" onclick="switchTab('history', this)">📂 코칭 기록</button>
     </div>
 
     <!-- 기록 탭 -->
-    <div class="tab-pane active" id="tab-history">
+    <div class="tab-pane" id="tab-history">
       <div class="card">
-        <div class="card-head"><span class="card-head-title">📂 코칭 기록</span></div>
+        <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="card-head-title">📂 코칭 기록</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="filterBadge" style="display:none;background:rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;align-items:center;gap:5px;cursor:pointer;" onclick="clearDateFilter()">
+              <span id="filterLabel"></span> ✕
+            </div>
+            <div style="position:relative;display:flex;align-items:center;">
+              <div style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">📅</div>
+              <input type="date" id="histDateFilter" onchange="applyDateFilter()" style="position:absolute;right:0;top:0;width:30px;height:30px;opacity:0;cursor:pointer;"/>
+            </div>
+          </div>
+        </div>
         <div class="card-body"><div id="historyList"><div class="history-empty">아직 코칭 기록이 없어요.</div></div></div>
       </div>
     </div>
 
     <!-- 새 코칭 탭 -->
-    <div class="tab-pane" id="tab-new">
+    <div class="tab-pane active" id="tab-new">
 
       <!-- 기본 정보 -->
       <div class="card">
@@ -379,30 +388,42 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
       <div class="card">
         <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
         <div class="card-body">
-          <div class="cpd-row">
-            <div class="cpd-card">
-              <label>평균 CPD</label>
-              <input type="date" id="cpd-date-before" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
-              <input type="text" id="cpd-before" placeholder="예: 48" oninput="calcCPD()"/>
-              <div class="cpd-change-area" style="min-height:8px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;">
+
+            <!-- 평균 -->
+            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">평균</span>
+              <input type="date" id="cpd-date-before-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <span style="font-size:13px;color:var(--mt);">~</span>
+              <input type="date" id="cpd-date-before-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <input type="text" id="cpd-before" placeholder="예: 48" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
             </div>
-            <div class="cpd-card">
-              <label>2주 후 CPD</label>
-              <input type="date" id="cpd-date-2w" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
-              <input type="text" id="cpd-2w" placeholder="예: 58" oninput="calcCPD()"/>
-              <div class="cpd-change-area">
+
+            <!-- 2주 후 -->
+            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">2주 후</span>
+              <input type="date" id="cpd-date-2w-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <span style="font-size:13px;color:var(--mt);">~</span>
+              <input type="date" id="cpd-date-2w-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <input type="text" id="cpd-2w" placeholder="예: 58" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center;min-height:40px;justify-content:center;">
                 <span class="cpd-change none" id="change-2w-before">코칭 전 대비 -</span>
               </div>
             </div>
-            <div class="cpd-card">
-              <label>1개월 후 CPD</label>
-              <input type="date" id="cpd-date-1m" style="width:100%;padding:6px 8px;border:1.5px solid var(--blb);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;color:var(--mt);text-align:center;outline:none;"/>
-              <input type="text" id="cpd-1m" placeholder="예: 50" oninput="calcCPD()"/>
-              <div class="cpd-change-area">
+
+            <!-- 1개월 후 -->
+            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
+              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">1개월 후</span>
+              <input type="date" id="cpd-date-1m-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <span style="font-size:13px;color:var(--mt);">~</span>
+              <input type="date" id="cpd-date-1m-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
+              <input type="text" id="cpd-1m" placeholder="예: 50" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center;min-height:40px;justify-content:center;">
                 <span class="cpd-change none" id="change-1m-before">코칭 전 대비 -</span>
                 <span class="cpd-change none" id="change-1m-2w">2주 후 대비 -</span>
               </div>
             </div>
+
           </div>
           <div style="display:grid;gap:14px;">
             <div class="field"><label>코칭 내용</label><textarea id="f-coaching" placeholder="코칭 내용을 상세히 입력하세요"></textarea></div>
@@ -508,7 +529,6 @@ function showSelect() {
         <div class="member-grid">
           ${members.map(m => `
             <button class="member-btn" onclick="enterMember(allMembers.find(m=>m.name==='${m.name}'))">
-              <div class="member-avatar">${m.name[0]}</div>
               <span>${m.name}</span>
             </button>`).join("")}
         </div>
@@ -528,7 +548,6 @@ async function enterMember(member) {
   document.getElementById("selectScreen").classList.add("hidden");
   document.getElementById("appScreen").style.display = "block";
 
-  document.getElementById("heroAv").textContent    = member.name[0];
   document.getElementById("heroName").textContent  = member.name;
   document.getElementById("heroSquad").textContent = member.squad;
 
@@ -594,10 +613,11 @@ async function loadHistory() {
       const note      = r[23] || "";
 
       return `
+        <div class="hist-item-wrap" data-date="${r[1] || ''}">
         <div class="hist-item">
           <div class="hist-header" onclick="toggleHist(${idx})">
             <div class="hist-left">
-              <span class="hist-date">📅 ${r[1] || "-"}</span>
+              <span class="hist-date">📅 작성일: ${r[1] || "-"}</span>
               <div class="hist-badges">${badges}</div>
             </div>
             <span class="hist-chevron" id="chev-${idx}">▾</span>
@@ -638,6 +658,7 @@ async function loadHistory() {
             ${feedback ? `<div class="detail-section"><div class="detail-label">추후 피드백 예정</div><div class="detail-text">${feedback}</div></div>` : ""}
             ${note ? `<div class="detail-section"><div class="detail-label">비고</div><div class="detail-text">${note}</div></div>` : ""}
           </div>
+        </div>
         </div>`;
     }).join("");
 
@@ -667,9 +688,9 @@ async function saveRecord() {
     cpdBefore:     document.getElementById("cpd-before").value,
     cpd2w:         document.getElementById("cpd-2w").value,
     cpd1m:         document.getElementById("cpd-1m").value,
-    cpdDateBefore: document.getElementById("cpd-date-before").value,
-    cpdDate2w:     document.getElementById("cpd-date-2w").value,
-    cpdDate1m:     document.getElementById("cpd-date-1m").value,
+    cpdDateBefore: (document.getElementById("cpd-date-before-s").value && document.getElementById("cpd-date-before-e").value) ? document.getElementById("cpd-date-before-s").value + " ~ " + document.getElementById("cpd-date-before-e").value : document.getElementById("cpd-date-before-s").value || "",
+    cpdDate2w:     (document.getElementById("cpd-date-2w-s").value && document.getElementById("cpd-date-2w-e").value) ? document.getElementById("cpd-date-2w-s").value + " ~ " + document.getElementById("cpd-date-2w-e").value : document.getElementById("cpd-date-2w-s").value || "",
+    cpdDate1m:     (document.getElementById("cpd-date-1m-s").value && document.getElementById("cpd-date-1m-e").value) ? document.getElementById("cpd-date-1m-s").value + " ~ " + document.getElementById("cpd-date-1m-e").value : document.getElementById("cpd-date-1m-s").value || "",
     coaching:  document.getElementById("f-coaching").value,
     feedback:  document.getElementById("f-feedback").value,
     note:      document.getElementById("f-note").value
@@ -709,6 +730,27 @@ function buildCallRows() {
 }
 
 function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
+
+function applyDateFilter() {
+  const d = document.getElementById("histDateFilter").value;
+  const badge = document.getElementById("filterBadge");
+  if (d) {
+    badge.style.display = "flex";
+    document.getElementById("filterLabel").textContent = d;
+    const allItems = document.querySelectorAll(".hist-item-wrap");
+    allItems.forEach(el => {
+      el.style.display = el.dataset.date === d ? "block" : "none";
+    });
+  } else {
+    clearDateFilter();
+  }
+}
+
+function clearDateFilter() {
+  document.getElementById("histDateFilter").value = "";
+  document.getElementById("filterBadge").style.display = "none";
+  document.querySelectorAll(".hist-item-wrap").forEach(el => { el.style.display = "block"; });
+}
 
 function toggleHist(idx) {
   const det  = document.getElementById("hdet-" + idx);
@@ -755,7 +797,7 @@ function resetForm() {
   });
   const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
   const dp = document.getElementById("d-post"); if (dp) dp.value = "";
-  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before","cpd-date-2w","cpd-date-1m","f-coaching","f-feedback","f-note"].forEach(id => {
+  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before-s","cpd-date-before-e","cpd-date-2w-s","cpd-date-2w-e","cpd-date-1m-s","cpd-date-1m-e","f-coaching","f-feedback","f-note"].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = "";
   });
 }
