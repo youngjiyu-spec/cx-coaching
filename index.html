@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2mQHpMA9UtWvAm2ZZwKdPhCfIa-eOMaOjm4pyO6I_qNtyQUj0CrBKUAzsANGP0P5c/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjHp6ZcZbOI28rzuK9a1cKNGQnX9Rf7mRSSIgp3t9KjNyFHzP6b4ocRagMDG2P2VsP/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -456,7 +456,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         <div class="card-head"><span class="card-head-title">👤 기본 정보</span></div>
         <div class="card-body">
           <div class="form-grid">
-            <div class="field"><label>날짜</label><input type="date" id="f-date"/></div>
+            <div class="field"><label>날짜</label><input type="date" id="f-date" onchange="updateDailyDateLabel()"/></div>
             <div class="field"><label>모니터링 진행자</label><input type="text" id="f-monitor" placeholder="진행자 이름"/></div>
           </div>
         </div>
@@ -868,6 +868,7 @@ async function saveRecord() {
   text.innerHTML = `<div class="dot"></div> 저장 중...`;
 
   const payload = {
+    action:    "create",
     member:    currentMember.name,
     squad:     currentMember.squad,
     date:      document.getElementById("f-date").value,
@@ -1156,12 +1157,23 @@ function calcCPD() {
 
 /* 금일 콜수 */
 function buildDailyGrid() {
-  const today = new Date();
+  updateDailyDateLabel();
+}
+
+function updateDailyDateLabel() {
+  const dateVal = document.getElementById("f-date")?.value;
+  let d;
+  if (dateVal) {
+    const [y,m,dd] = dateVal.split("-").map(Number);
+    d = new Date(y, m-1, dd);
+  } else {
+    d = new Date();
+  }
   const days = ["일","월","화","수","목","금","토"];
   const dayLabel = document.getElementById("todayDayLabel");
   const dateLabel = document.getElementById("todayDateLabel");
-  if (dayLabel) dayLabel.textContent = days[today.getDay()] + "요일";
-  if (dateLabel) dateLabel.textContent = today.toISOString().split("T")[0];
+  if (dayLabel) dayLabel.textContent = days[d.getDay()] + "요일";
+  if (dateLabel) dateLabel.textContent = d.toISOString().split("T")[0];
 }
 
 function setToday() {
