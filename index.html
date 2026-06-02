@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjHp6ZcZbOI28rzuK9a1cKNGQnX9Rf7mRSSIgp3t9KjNyFHzP6b4ocRagMDG2P2VsP/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCynNGyJ8OXDi18aZuROHBWmzrRrQ-_xjk733WTXkJPMlQTR8mI_BJ_qJKW9MbESFt/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -1172,8 +1172,11 @@ function updateDailyDateLabel() {
   const days = ["일","월","화","수","목","금","토"];
   const dayLabel = document.getElementById("todayDayLabel");
   const dateLabel = document.getElementById("todayDateLabel");
+  const yy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const dd2 = String(d.getDate()).padStart(2,"0");
   if (dayLabel) dayLabel.textContent = days[d.getDay()] + "요일";
-  if (dateLabel) dateLabel.textContent = d.toISOString().split("T")[0];
+  if (dateLabel) dateLabel.textContent = `${yy}-${mm}-${dd2}`;
 }
 
 function setToday() {
