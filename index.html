@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq3ZJZPJLgNqqwwD0fcfB-oIqnxqr6uhKuLfQPsTWmCKOb4yBORGlPlUIgQBEKSlg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHYqLuxjOqlz57ySKAaVbhj5CtO-MzgYYNJaE5u8BmcFb5j8Y4DwdSaah_ASinYgS2/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -1314,4 +1314,28 @@ function renderDraftSidebar() {
   if (cnt) { cnt.textContent = "임시저장 " + drafts.length + "개"; }
   list.innerHTML = drafts.map(d => `
     <div class="draft-item" onclick="loadDraftById(${d.id})">
-      <button c
+      <button class="draft-item-del" onclick="event.stopPropagation();deleteDraftById(${d.id})">✕</button>
+      <div class="draft-item-name">${d.member}</div>
+      <div class="draft-item-time">${d.date||"-"}<br/>${d.savedAt}</div>
+    </div>`).join("");
+}
+
+function toggleDraftSidebar(forceClose) {
+  const sb = document.getElementById("draftSidebar");
+  if (!sb) return;
+  if (forceClose === false) { sb.classList.remove("open"); return; }
+  sb.classList.toggle("open");
+}
+
+function checkDraft() { renderDraftSidebar(); }
+
+function showToast(msg, isErr) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className   = "toast " + (isErr ? "err" : "ok");
+  t.style.display = "flex";
+  setTimeout(() => { t.style.display = "none"; }, 3500);
+}
+</script>
+</body>
+</html>
