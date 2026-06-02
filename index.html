@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjHp6ZcZbOI28rzuK9a1cKNGQnX9Rf7mRSSIgp3t9KjNyFHzP6b4ocRagMDG2P2VsP/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJDtL7ubaKW-66tES4KXdnpnN-PnIEdmIsMKYQhEKiBJewL7xDoY-FTgCS-GxqGUUr/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -301,6 +301,31 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .toast.err{background:var(--rd);color:var(--rdt);border:1px solid var(--rdb);}
 .dot{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
 
+/* 임시저장 사이드바 */
+.app-layout{display:flex;position:relative;}
+.draft-sidebar{width:0;overflow:hidden;transition:width .25s ease;flex-shrink:0;background:#fff;border-right:1px solid var(--br);position:relative;z-index:50;}
+.draft-sidebar.open{width:196px;}
+.sb-inner{width:196px;padding:12px;}
+.sb-title{font-size:10px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.sb-close{background:none;border:none;cursor:pointer;font-size:14px;color:var(--mt);padding:0;line-height:1;}
+.sb-empty{font-size:12px;color:var(--mt);text-align:center;padding:1.5rem 0;}
+.draft-item{padding:8px 10px;border:1px solid var(--br);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s;position:relative;}
+.draft-item:hover{border-color:var(--blb);background:var(--bll);}
+.draft-item-name{font-size:12px;font-weight:700;color:var(--tx);margin-bottom:2px;padding-right:16px;}
+.draft-item-time{font-size:10px;color:var(--mt);line-height:1.4;}
+.draft-item-del{position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;font-size:11px;color:var(--mt);padding:0;line-height:1;}
+.draft-item-del:hover{color:var(--rdt);}
+.app-main{flex:1;min-width:0;}
+/* 플로팅 임시저장 버튼 */
+.float-draft{position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:200;display:none;}
+.float-draft.visible{display:flex;}
+.float-btn-save{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--bl);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.35);transition:all .15s;}
+.float-btn-save:hover{background:var(--bld);transform:translateY(-1px);}
+.float-btn-list{display:none;align-items:center;gap:6px;padding:7px 14px;background:#fff;color:var(--bld);border:1.5px solid var(--blb);border-radius:999px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .15s;}
+.float-btn-list:hover{background:var(--bll);}
+.float-btn-list.on{display:flex;}
+.float-dot{width:7px;height:7px;background:#E24B4A;border-radius:50%;flex-shrink:0;}
+
 @media(max-width:600px){
   .form-grid,.cpd-row{grid-template-columns:1fr;}
   .topbar{padding:0 1rem;}
@@ -368,6 +393,19 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
     <button class="back-btn" onclick="goSelect()">← 팀원 선택</button>
   </div>
 
+  <div class="app-layout">
+    <!-- 임시저장 사이드바 -->
+    <div class="draft-sidebar" id="draftSidebar">
+      <div class="sb-inner">
+        <div class="sb-title">
+          💾 임시저장
+          <button class="sb-close" onclick="toggleDraftSidebar()">✕</button>
+        </div>
+        <div id="draftSidebarList"><div class="sb-empty">저장된 내용이 없어요.</div></div>
+      </div>
+    </div>
+    <!-- 메인 -->
+    <div class="app-main">
   <div class="page">
 
     <!-- 팀원 헤더 -->
@@ -464,7 +502,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
       <!-- 코칭 결과 -->
       <div class="card">
-        <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;"><span class="card-head-title">📈 코칭 결과 (CPD)</span><div style="display:flex;align-items:center;gap:8px;"><div id="draftBadge" style="display:none;align-items:center;gap:5px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;cursor:pointer;" onclick="loadDraft()">📋 임시저장 불러오기</div><button onclick="saveDraft()" style="display:flex;align-items:center;gap:5px;padding:4px 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);border-radius:7px;color:#fff;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;">💾 임시저장</button></div></div>
+        <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
         <div class="card-body">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;">
 
@@ -515,7 +553,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
               <span id="saveBtnText">💾 Google Sheets에 저장</span>
             </button>
             <button class="btn-reset" onclick="resetForm()">↺ 초기화</button>
-            <button class="btn-reset" onclick="clearDraft()" style="font-size:12px;">🗑 임시저장 삭제</button>
+
           </div>
           <div class="toast" id="toast"></div>
         </div>
@@ -523,7 +561,18 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
     </div><!-- /tab-new -->
   </div><!-- /page -->
+    </div><!-- /app-main -->
+  </div><!-- /app-layout -->
 </div><!-- /appScreen -->
+
+<!-- 플로팅 임시저장 버튼 -->
+<div class="float-draft" id="floatDraft">
+  <button class="float-btn-list" id="floatListBtn" onclick="toggleDraftSidebar()">
+    <div class="float-dot"></div>
+    <span id="floatDraftCount">임시저장 0개</span>
+  </button>
+  <button class="float-btn-save" onclick="saveDraft()">💾 임시저장</button>
+</div>
 
 <script>
 const LOCK_PW = "cx2026!!";
@@ -636,6 +685,8 @@ async function enterMember(member) {
 
   await loadHistory();
   checkDraft();
+  const fd = document.getElementById("floatDraft");
+  if (fd) fd.classList.add("visible");
 }
 
 /* ── 코칭 기록 로드 ── */
@@ -698,8 +749,9 @@ async function loadHistory() {
       const feedback  = r[22] || "";
       const note      = r[23] || "";
 
+      const ukey = r[28] || r[2] + '_' + idx;
       return `
-        <div class="hist-item-wrap" data-date="${r[2] || ''}">
+        <div class="hist-item-wrap" data-date="${r[2] || ''}" data-key="${ukey}">
         <div class="hist-item">
           <div class="hist-header" onclick="toggleHist(${idx})">
             <div class="hist-left">
@@ -829,9 +881,10 @@ async function saveRecord() {
     cpdDate2w:     (document.getElementById("cpd-date-2w-s").value && document.getElementById("cpd-date-2w-e").value) ? document.getElementById("cpd-date-2w-s").value + " ~ " + document.getElementById("cpd-date-2w-e").value : document.getElementById("cpd-date-2w-s").value || "",
     cpdDate1m:     (document.getElementById("cpd-date-1m-s").value && document.getElementById("cpd-date-1m-e").value) ? document.getElementById("cpd-date-1m-s").value + " ~ " + document.getElementById("cpd-date-1m-e").value : document.getElementById("cpd-date-1m-s").value || "",
     dailyCalls: document.getElementById("dailyCall")?.value || "",
-    coaching:  document.getElementById("f-coaching").innerText,
-    feedback:  document.getElementById("f-feedback").innerText,
-    note:      document.getElementById("f-note").innerText
+    coaching:   document.getElementById("f-coaching").innerText,
+    feedback:   document.getElementById("f-feedback").innerText,
+    note:       document.getElementById("f-note").innerText,
+    uniqueKey:  Date.now() + "_" + Math.random().toString(36).slice(2, 7)
   };
 
   try {
@@ -1009,15 +1062,21 @@ async function saveEditMode(idx) {
   const note = document.getElementById(`em-note-${idx}`).innerText;
 
   const rowEl = document.querySelector(`#hdet-${idx}`).closest(".hist-item-wrap");
-  const date = rowEl ? rowEl.dataset.date : "";
+  const date   = rowEl ? rowEl.dataset.date  : "";
+  const ukey   = rowEl ? rowEl.dataset.key   : "";
 
   const payload = {
-    action: "update",
-    member: currentMember.name,
-    date: date,
-    rowIndex: idx,
-    calls, post: { result: postR, detail: postD },
-    coaching, feedback, note
+    action:    "update",
+    uniqueKey: ukey,
+    member:    currentMember.name,
+    squad:     currentMember.squad,
+    date:      date,
+    monitor:   "",
+    calls,
+    post:      { result: postR, detail: postD },
+    coaching, feedback, note,
+    cpdBefore: "", cpd2w: "", cpd1m: "",
+    cpdDateBefore: "", cpdDate2w: "", cpdDate1m: ""
   };
 
   try {
@@ -1106,69 +1165,101 @@ function switchTab(id, btn) {
   document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
   btn.classList.add("active");
   document.getElementById("tab-" + id).classList.add("active");
+  const fd = document.getElementById("floatDraft");
+  if (fd) fd.classList.toggle("visible", id === "new");
 }
 
-/* ── 임시저장 ── */
-const DRAFT_KEY = () => "cx_draft_" + (currentMember?.name || "unknown");
+/* ── 임시저장 (사이드바) ── */
+const DRAFTS_STORE = "cx_drafts_v2";
+
+function getDrafts() {
+  try { return JSON.parse(localStorage.getItem(DRAFTS_STORE) || "[]"); } catch(e) { return []; }
+}
+function setDrafts(arr) {
+  try { localStorage.setItem(DRAFTS_STORE, JSON.stringify(arr)); } catch(e) {}
+}
 
 function saveDraft() {
+  if (!currentMember) return;
   const draft = {
-    date:      document.getElementById("f-date")?.value || "",
-    monitor:   document.getElementById("f-monitor")?.value || "",
-    coaching:  document.getElementById("f-coaching")?.innerHTML || "",
-    feedback:  document.getElementById("f-feedback")?.innerHTML || "",
-    note:      document.getElementById("f-note")?.innerHTML || "",
-    cpdBefore: document.getElementById("cpd-before")?.value || "",
-    cpd2w:     document.getElementById("cpd-2w")?.value || "",
-    cpd1m:     document.getElementById("cpd-1m")?.value || "",
+    id:       Date.now(),
+    member:   currentMember.name,
+    squad:    currentMember.squad,
+    date:     document.getElementById("f-date")?.value || "",
+    monitor:  document.getElementById("f-monitor")?.value || "",
+    coaching: document.getElementById("f-coaching")?.innerHTML || "",
+    feedback: document.getElementById("f-feedback")?.innerHTML || "",
+    note:     document.getElementById("f-note")?.innerHTML || "",
+    cpdBefore:     document.getElementById("cpd-before")?.value || "",
+    cpd2w:         document.getElementById("cpd-2w")?.value || "",
+    cpd1m:         document.getElementById("cpd-1m")?.value || "",
+    cpdDateBefore: [document.getElementById("cpd-date-before-s")?.value, document.getElementById("cpd-date-before-e")?.value].filter(Boolean).join(" ~ "),
+    cpdDate2w:     [document.getElementById("cpd-date-2w-s")?.value, document.getElementById("cpd-date-2w-e")?.value].filter(Boolean).join(" ~ "),
+    cpdDate1m:     [document.getElementById("cpd-date-1m-s")?.value, document.getElementById("cpd-date-1m-e")?.value].filter(Boolean).join(" ~ "),
+    dailyCall: document.getElementById("dailyCall")?.value || "",
     savedAt:   new Date().toLocaleString("ko-KR")
   };
-  try {
-    localStorage.setItem(DRAFT_KEY(), JSON.stringify(draft));
-    showToast("✅ 임시저장 완료! (" + draft.savedAt + ")", false);
-    checkDraft();
-  } catch(e) {
-    showToast("❌ 임시저장 실패 (저장 공간 부족)", true);
-  }
+  const drafts = getDrafts();
+  const idx = drafts.findIndex(d => d.member === draft.member && d.date === draft.date);
+  if (idx >= 0) drafts[idx] = draft;
+  else drafts.unshift(draft);
+  setDrafts(drafts.slice(0, 20));
+  renderDraftSidebar();
+  showToast("💾 임시저장 완료! (" + draft.savedAt + ")", false);
 }
 
-function loadDraft() {
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY());
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (d.date)      document.getElementById("f-date").value = d.date;
-    if (d.monitor)   document.getElementById("f-monitor").value = d.monitor;
-    if (d.coaching)  document.getElementById("f-coaching").innerHTML = d.coaching;
-    if (d.feedback)  document.getElementById("f-feedback").innerHTML = d.feedback;
-    if (d.note)      document.getElementById("f-note").innerHTML = d.note;
-    if (d.cpdBefore) document.getElementById("cpd-before").value = d.cpdBefore;
-    if (d.cpd2w)     document.getElementById("cpd-2w").value = d.cpd2w;
-    if (d.cpd1m)     document.getElementById("cpd-1m").value = d.cpd1m;
-    showToast("📋 임시저장 내용을 불러왔어요 (" + d.savedAt + ")", false);
-  } catch(e) {}
+function loadDraftById(id) {
+  const d = getDrafts().find(x => x.id === id);
+  if (!d) return;
+  if (d.date)     { const el=document.getElementById("f-date"); if(el) el.value=d.date; }
+  if (d.monitor)  { const el=document.getElementById("f-monitor"); if(el) el.value=d.monitor; }
+  if (d.coaching) { const el=document.getElementById("f-coaching"); if(el) el.innerHTML=d.coaching; }
+  if (d.feedback) { const el=document.getElementById("f-feedback"); if(el) el.innerHTML=d.feedback; }
+  if (d.note)     { const el=document.getElementById("f-note"); if(el) el.innerHTML=d.note; }
+  if (d.cpdBefore){ const el=document.getElementById("cpd-before"); if(el) el.value=d.cpdBefore; }
+  if (d.cpd2w)    { const el=document.getElementById("cpd-2w"); if(el) el.value=d.cpd2w; }
+  if (d.cpd1m)    { const el=document.getElementById("cpd-1m"); if(el) el.value=d.cpd1m; }
+  if (d.dailyCall){ const el=document.getElementById("dailyCall"); if(el) el.value=d.dailyCall; }
+  switchTab("new", document.querySelectorAll(".tab-btn")[0]);
+  toggleDraftSidebar(false);
+  showToast("📋 임시저장 내용을 불러왔어요!", false);
 }
 
-function clearDraft() {
-  try { localStorage.removeItem(DRAFT_KEY()); } catch(e) {}
-  checkDraft();
+function deleteDraftById(id) {
+  setDrafts(getDrafts().filter(d => d.id !== id));
+  renderDraftSidebar();
   showToast("🗑 임시저장이 삭제되었어요.", false);
 }
 
-function checkDraft() {
-  const badge = document.getElementById("draftBadge");
-  if (!badge) return;
-  try {
-    const raw = localStorage.getItem(DRAFT_KEY());
-    if (raw) {
-      const d = JSON.parse(raw);
-      badge.textContent = "📋 임시저장 불러오기 (" + d.savedAt + ")";
-      badge.style.display = "flex";
-    } else {
-      badge.style.display = "none";
-    }
-  } catch(e) { badge.style.display = "none"; }
+function renderDraftSidebar() {
+  const drafts = getDrafts();
+  const list = document.getElementById("draftSidebarList");
+  const btn  = document.getElementById("floatListBtn");
+  const cnt  = document.getElementById("floatDraftCount");
+  if (!list) return;
+  if (!drafts.length) {
+    list.innerHTML = '<div class="sb-empty">저장된 내용이 없어요.</div>';
+    if (btn) btn.classList.remove("on");
+    return;
+  }
+  if (btn) { btn.classList.add("on"); }
+  if (cnt) { cnt.textContent = "임시저장 " + drafts.length + "개"; }
+  list.innerHTML = drafts.map(d => `
+    <div class="draft-item" onclick="loadDraftById(${d.id})">
+      <button class="draft-item-del" onclick="event.stopPropagation();deleteDraftById(${d.id})">✕</button>
+      <div class="draft-item-name">${d.member}</div>
+      <div class="draft-item-time">${d.date||"-"}<br/>${d.savedAt}</div>
+    </div>`).join("");
 }
+
+function toggleDraftSidebar(forceClose) {
+  const sb = document.getElementById("draftSidebar");
+  if (!sb) return;
+  if (forceClose === false) { sb.classList.remove("open"); return; }
+  sb.classList.toggle("open");
+}
+
+function checkDraft() { renderDraftSidebar(); }
 
 function showToast(msg, isErr) {
   const t = document.getElementById("toast");
