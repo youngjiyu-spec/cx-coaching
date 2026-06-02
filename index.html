@@ -14,7 +14,7 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCynNGyJ8OXDi18aZuROHBWmzrRrQ-_xjk733WTXkJPMlQTR8mI_BJ_qJKW9MbESFt/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq3ZJZPJLgNqqwwD0fcfB-oIqnxqr6uhKuLfQPsTWmCKOb4yBORGlPlUIgQBEKSlg/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
@@ -591,6 +591,15 @@ function checkLock() {
   }
 }
 
+function normalizeResult(v) {
+  if (!v) return "ok";
+  const s = String(v).toLowerCase().trim();
+  if (s === "ok" || s.includes("문제없음") || s.includes("적절")) return "ok";
+  if (s === "warn" || s.includes("보통")) return "warn";
+  if (s === "bad" || s.includes("개선필요")) return "bad";
+  return "ok";
+}
+
 const CALL_ITEMS = [
   "오프닝 구간 적절성",
   "경청 태도",
@@ -713,7 +722,7 @@ async function loadHistory() {
     if (rows[0][18]) document.getElementById("statCPD").textContent = rows[0][18];
 
     list.innerHTML = rows.map((r, idx) => {
-      const issues = CALL_ITEMS.map((item, i) => ({ item, val: r[4 + i * 2] || "ok" })).filter(x => x.val !== "ok");
+      const issues = CALL_ITEMS.map((item, i) => ({ item, val: normalizeResult(r[4 + i * 2]) })).filter(x => x.val !== "ok");
       const badges = issues.length === 0
         ? `<span class="badge b-ok">✅ 전체 문제없음</span>`
         : issues.slice(0, 4).map(x =>
@@ -722,7 +731,7 @@ async function loadHistory() {
 
       // 상세 — 통화 모니터링 행
       const callRows = CALL_ITEMS.map((item, i) => {
-        const res = r[4 + i * 2] || "ok";
+        const res = normalizeResult(r[4 + i * 2]);
         const detRaw = r[5 + i * 2] || "";
         const det = detRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
         const cls = res === "ok" ? "dr-ok" : res === "warn" ? "dr-warn" : "dr-bad";
@@ -730,7 +739,7 @@ async function loadHistory() {
         return `<tr><td class="dt-item">${item}</td><td><span class="detail-result ${cls}">${lbl}</span></td><td style="color:var(--mt);font-size:12px;">${det}</td></tr>`;
       }).join("");
 
-      const postRes = r[16] || "ok";
+      const postRes = normalizeResult(r[16]);
       const postDetRaw = r[17] || "";
       const postDet = postDetRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
       const postCls = postRes === "ok" ? "dr-ok" : postRes === "warn" ? "dr-warn" : "dr-bad";
@@ -819,19 +828,19 @@ async function loadHistory() {
                     <tbody>
                       ${CALL_ITEMS.map((item, i) => `<tr>
                         <td>${item}</td>
-                        <td><select class="res-sel ${r[4+i*2]||'ok'}" id="em-r-${idx}-${i}" onchange="styleSelect(this)">
-                          <option value="ok" ${(r[4+i*2]||'ok')==='ok'?'selected':''}>문제없음</option>
-                          <option value="warn" ${r[4+i*2]==='warn'?'selected':''}>보통</option>
-                          <option value="bad" ${r[4+i*2]==='bad'?'selected':''}>개선필요</option>
+                        <td><select class="res-sel ${normalizeResult(r[4+i*2])}" id="em-r-${idx}-${i}" onchange="styleSelect(this)">
+                          <option value="ok" ${normalizeResult(r[4+i*2])==='ok'?'selected':''}>문제없음</option>
+                          <option value="warn" ${normalizeResult(r[4+i*2])==='warn'?'selected':''}>보통</option>
+                          <option value="bad" ${normalizeResult(r[4+i*2])==='bad'?'selected':''}>개선필요</option>
                         </select></td>
                         <td><input class="edit-inp" type="text" id="em-d-${idx}-${i}" value="${(r[5+i*2]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
                       </tr>`).join('')}
                       <tr>
                         <td>후처리 적절성</td>
-                        <td><select class="res-sel ${r[16]||'ok'}" id="em-post-r-${idx}" onchange="styleSelect(this)">
-                          <option value="ok" ${(r[16]||'ok')==='ok'?'selected':''}>적절</option>
-                          <option value="warn" ${r[16]==='warn'?'selected':''}>보통</option>
-                          <option value="bad" ${r[16]==='bad'?'selected':''}>개선필요</option>
+                        <td><select class="res-sel ${normalizeResult(r[16])}" id="em-post-r-${idx}" onchange="styleSelect(this)">
+                          <option value="ok" ${normalizeResult(r[16])==='ok'?'selected':''}>적절</option>
+                          <option value="warn" ${normalizeResult(r[16])==='warn'?'selected':''}>보통</option>
+                          <option value="bad" ${normalizeResult(r[16])==='bad'?'selected':''}>개선필요</option>
                         </select></td>
                         <td><input class="edit-inp" type="text" id="em-post-d-${idx}" value="${(r[17]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
                       </tr>
@@ -930,7 +939,15 @@ function buildCallRows() {
     </tr>`).join("");
 }
 
-function styleSelect(sel) { sel.className = "res-sel " + sel.value; }
+function styleSelect(sel) {
+  sel.className = "res-sel " + sel.value;
+}
+// 수정 모드 select에도 적용
+document.addEventListener("change", function(e) {
+  if (e.target && e.target.classList.contains("res-sel")) {
+    styleSelect(e.target);
+  }
+});
 
 /* ── 미니 에디터 툴바 ── */
 const EDITOR_FC = ["#0F172A","#64748B","#E24B4A","#D85A30","#BA7517","#3B6D11","#185FA5","#534AB7","#993556","#065F46","#854F0B","#BFDBFE","#A7F3D0","#FCD34D"];
@@ -1181,7 +1198,14 @@ function updateDailyDateLabel() {
 
 function setToday() {
   const el = document.getElementById("f-date");
-  if (el) el.value = new Date().toISOString().split("T")[0];
+  if (el) {
+    const t = new Date();
+    const yy = t.getFullYear();
+    const mm = String(t.getMonth()+1).padStart(2,"0");
+    const dd = String(t.getDate()).padStart(2,"0");
+    el.value = yy+"-"+mm+"-"+dd;
+  }
+  updateDailyDateLabel();
 }
 
 function resetForm() {
@@ -1290,28 +1314,4 @@ function renderDraftSidebar() {
   if (cnt) { cnt.textContent = "임시저장 " + drafts.length + "개"; }
   list.innerHTML = drafts.map(d => `
     <div class="draft-item" onclick="loadDraftById(${d.id})">
-      <button class="draft-item-del" onclick="event.stopPropagation();deleteDraftById(${d.id})">✕</button>
-      <div class="draft-item-name">${d.member}</div>
-      <div class="draft-item-time">${d.date||"-"}<br/>${d.savedAt}</div>
-    </div>`).join("");
-}
-
-function toggleDraftSidebar(forceClose) {
-  const sb = document.getElementById("draftSidebar");
-  if (!sb) return;
-  if (forceClose === false) { sb.classList.remove("open"); return; }
-  sb.classList.toggle("open");
-}
-
-function checkDraft() { renderDraftSidebar(); }
-
-function showToast(msg, isErr) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className   = "toast " + (isErr ? "err" : "ok");
-  t.style.display = "flex";
-  setTimeout(() => { t.style.display = "none"; }, 3500);
-}
-</script>
-</body>
-</html>
+      <button c
