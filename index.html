@@ -792,18 +792,18 @@ async function loadHistory() {
                 <div class="cpd-summary">
                   <div class="cpd-s-card">
                     <div class="cpd-s-lbl">평균 CPD</div>
-                    ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
+                    ${r[24] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[24]}</div>` : ""}
                     <div class="cpd-s-val">${isNaN(cpdb) ? "-" : cpdb}</div>
                   </div>
                   <div class="cpd-s-card">
                     <div class="cpd-s-lbl">2주 후 CPD</div>
-                    ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
+                    ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
                     <div class="cpd-s-val">${isNaN(cpd2) ? "-" : cpd2}</div>
                     ${cpdPct(cpdb, cpd2)}
                   </div>
                   <div class="cpd-s-card">
                     <div class="cpd-s-lbl">1개월 후 CPD</div>
-                    ${r[27] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[27]}</div>` : ""}
+                    ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
                     <div class="cpd-s-val">${isNaN(cpd1) ? "-" : cpd1}</div>
                     ${cpdPct(cpdb, cpd1)}
                     <div class="cpd-s-chg" style="font-size:10px;color:var(--mt);">2주 후 대비: ${isNaN(cpd2)||isNaN(cpd1)?"-":(((cpd1-cpd2)/cpd2*100)>=0?"▲ +":"▼ ")+(isNaN(cpd2)||isNaN(cpd1)?"":(((cpd1-cpd2)/cpd2*100).toFixed(1))+"%")}</div>
