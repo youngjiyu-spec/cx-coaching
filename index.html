@@ -1022,7 +1022,7 @@ async function downloadPdf(idx, e) {
   }).join("");
 
   const wrap = document.createElement("div");
-  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;position:fixed;left:-9999px;top:0;background:#fff;";
+  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;position:absolute;left:0;top:0;z-index:-9999;background:#fff;";
   wrap.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #DCEEF9;padding-bottom:14px;margin-bottom:18px;">
       <div>
@@ -1047,6 +1047,7 @@ async function downloadPdf(idx, e) {
     ${note ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">비고</div><div style="font-size:13px;white-space:pre-wrap;">${note}</div></div>` : ""}
   `;
   document.body.appendChild(wrap);
+  await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
 
   const fileName = `QA코칭_${currentMember.name}_${r[2] || "date"}.pdf`;
   try {
@@ -1054,7 +1055,7 @@ async function downloadPdf(idx, e) {
       margin: 10,
       filename: fileName,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 2, backgroundColor: "#ffffff" },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     }).from(wrap).save();
   } catch (err) {
