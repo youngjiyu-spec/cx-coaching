@@ -14,13 +14,13 @@
 <script>
 const SHEET_ID        = "17Ba9GurK4X5G2Af10FqzMPu6BDz7oGXdknZOlbwjH74";
 const API_KEY         = "AIzaSyBxZ5GX8xCm6bwSc8LrL3jQxVhHmwobGsg";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBN6skPhRL_KRvYr1I8cmcpBEOE_4xATjqneLNkRzVWIs987BxQKEEv8gGNMTI7MbB/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNnEXmR994aanuUrqHeXvqMeL3YLDG0sYPasetW4-0x7o2sTLo5DR-eHbm-QgeA9lq/exec";
 </script>
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 
 <style>
 :root {
-  --bl:#2563EB; --bld:#1d4ed8; --bll:#EFF6FF; --blb:#BFDBFE;
+  --bl:#3E749F; --bld:#2E6088; --bll:#F7FBFE; --blb:#E0EFF8;
   --gn:#ECFDF5; --gnt:#065F46; --gnb:#A7F3D0;
   --wn:#FFFBEB; --wnt:#92400E; --wnb:#FCD34D;
   --rd:#FEF2F2; --rdt:#991B1B; --rdb:#FCA5A5;
@@ -46,7 +46,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .daily-day{font-size:10px;font-weight:700;color:var(--mt);text-align:center;}
 .daily-date{font-size:10px;color:var(--mt);text-align:center;}
 .daily-inp{width:100%;padding:7px 4px;border:1.5px solid var(--blb);border-radius:7px;font-size:14px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;}
-.daily-inp:focus{border-color:var(--bl);box-shadow:0 0 0 2px rgba(37,99,235,.1);}
+.daily-inp:focus{border-color:var(--bl);box-shadow:0 0 0 2px rgba(62,116,159,.1);}
 .daily-inp.today{border-color:var(--bl);}
 .daily-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--blb);}
 .daily-total-lbl{font-size:12px;color:var(--mt);}
@@ -80,7 +80,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 #selectScreen{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:2rem;
-  background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);
+  background:linear-gradient(160deg,#F7FBFE 0%,#F5F9FD 55%,#F8FAFC 100%);
   padding:2.5rem 1rem;
 }
 .brand{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
@@ -116,7 +116,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   display:flex;flex-direction:column;align-items:center;gap:6px;
   font-family:inherit;
 }
-.member-btn:hover{border-color:var(--bl);background:var(--bll);color:var(--bld);transform:translateY(-1px);box-shadow:0 2px 8px rgba(37,99,235,.1);}
+.member-btn:hover{border-color:var(--bl);background:var(--bll);color:var(--bld);transform:translateY(-1px);box-shadow:0 2px 8px rgba(62,116,159,.1);}
 .member-avatar{
   width:36px;height:36px;border-radius:50%;
   background:var(--bll);color:var(--bld);
@@ -132,7 +132,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   background:var(--bl);height:58px;padding:0 2rem;
   display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 12px rgba(37,99,235,.25);
+  box-shadow:0 2px 12px rgba(62,116,159,.25);
 }
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .topbar-icon{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
@@ -161,7 +161,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 /* 탭 */
 .tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:6px;margin-bottom:1.25rem;}
 .tab-btn{flex:1;padding:9px;border:none;border-radius:calc(var(--r) - 4px);background:transparent;color:var(--mt);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:all .15s;}
-.tab-btn.active{background:var(--bl);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3);}
+.tab-btn.active{background:var(--bl);color:#fff;box-shadow:0 2px 8px rgba(62,116,159,.3);}
 .tab-btn:hover:not(.active){background:var(--bll);color:var(--bl);}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
@@ -181,7 +181,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   font-size:14px;font-family:inherit;background:var(--bg);color:var(--tx);outline:none;
   transition:border-color .15s,box-shadow .15s;
 }
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:#fff;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(62,116,159,.1);background:#fff;}
 .field textarea{resize:vertical;min-height:78px;}
 
 /* 모니터링 테이블 */
@@ -202,24 +202,39 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   min-width:106px;transition:box-shadow .15s;
 }
-.res-sel:focus{box-shadow:0 0 0 2px rgba(37,99,235,.25);}
+.res-sel:focus{box-shadow:0 0 0 2px rgba(62,116,159,.25);}
 .res-sel.ok  {background-color:var(--gn);color:var(--gnt);}
 .res-sel.warn{background-color:var(--wn);color:var(--wnt);}
 .res-sel.bad {background-color:var(--rd);color:var(--rdt);}
 
 .det-inp{width:100%;padding:7px 11px;border:1.5px solid var(--br);border-radius:var(--rsm);font-size:13px;font-family:inherit;background:#fff;color:var(--tx);outline:none;transition:border-color .15s,box-shadow .15s;}
-.det-inp:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.det-inp:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(62,116,159,.1);}
 
-/* CPD */
-.cpd-row{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:1rem;}
-.cpd-card{background:var(--bll);border:1.5px solid var(--blb);border-radius:var(--rsm);padding:14px 16px;display:flex;align-items:center;gap:14px;}
-.cpd-card label{font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;}
-.cpd-card input{padding:10px;border:1.5px solid var(--blb);border-radius:var(--rsm);font-size:18px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;transition:border-color .15s,box-shadow .15s;}
-.cpd-card input:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
-.cpd-change{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;margin-left:auto;}
-.cpd-change.up{background:var(--gn);color:var(--gnt);}
-.cpd-change.down{background:var(--rd);color:var(--rdt);}
-.cpd-change.none{background:#F1F5F9;color:var(--mt);}
+/* QA 평가표 */
+.qa-total-bar{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--bll);border-bottom:1px solid var(--blb);}
+.qa-total-track{flex:1;height:8px;border-radius:999px;background:#fff;overflow:hidden;}
+.qa-total-fill{height:100%;background:var(--bl);border-radius:999px;transition:width .2s;}
+.qa-total-badge{font-size:14px;font-weight:700;color:var(--bld);white-space:nowrap;}
+.qa-cat{border-bottom:1px solid var(--br);}
+.qa-cat:last-child{border-bottom:none;}
+.qa-cat-head{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#FAFBFC;}
+.qa-cat-head span:first-child{font-size:13px;font-weight:700;color:var(--tx);}
+.qa-cat-max{font-size:11px;font-weight:700;color:var(--mt);}
+.qa-item{padding:10px 18px;border-top:1px solid #F1F5F9;}
+.qa-item-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.qa-item-name{font-size:13px;color:var(--tx);flex:1;}
+.qa-score-sel{
+  padding:5px 26px 5px 12px;border-radius:999px;border:1.5px solid var(--br);
+  font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;outline:none;background-color:#fff;color:var(--tx);
+  -webkit-appearance:none;appearance:none;background-repeat:no-repeat;background-position:right 8px center;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  min-width:84px;flex-shrink:0;
+}
+.qa-score-sel.full{background-color:var(--gn);color:var(--gnt);border-color:var(--gnb);}
+.qa-score-sel.zero{background-color:var(--rd);color:var(--rdt);border-color:var(--rdb);}
+.qa-score-sel.partial{background-color:var(--wn);color:var(--wnt);border-color:var(--wnb);}
+.qa-memo{width:100%;margin-top:8px;padding:7px 11px;border:1.5px solid var(--wnb);border-radius:var(--rsm);font-size:12px;font-family:inherit;background:var(--wn);color:var(--tx);outline:none;}
+.qa-memo.hidden{display:none;}
 
 /* 코칭 기록 */
 .history-empty{text-align:center;padding:3rem 2rem;color:var(--mt);font-size:14px;}
@@ -242,11 +257,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .dr-warn{background:var(--wn);color:var(--wnt);}
 .dr-bad{background:var(--rd);color:var(--rdt);}
 .detail-text{font-size:13px;color:var(--tx);line-height:1.6;background:var(--card);border:1px solid var(--br);border-radius:var(--rsm);padding:10px 12px;}
-.cpd-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.cpd-s-card{background:var(--bll);border:1px solid var(--blb);border-radius:var(--rsm);padding:10px;text-align:center;}
-.cpd-s-lbl{font-size:10px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
-.cpd-s-val{font-size:18px;font-weight:700;color:var(--bld);}
-.cpd-s-chg{font-size:11px;font-weight:700;margin-top:3px;}
+
 .chg-up{color:var(--gnt);}
 .chg-dn{color:var(--rdt);}
 .hist-item{border:1.5px solid var(--br);border-radius:var(--rsm);margin-bottom:10px;overflow:hidden;transition:all .15s;}
@@ -273,7 +284,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .tb{display:flex;align-items:center;gap:1px;flex-wrap:nowrap;padding:0 4px;border-bottom:1px solid var(--br);background:#FAFAFA;max-height:0;overflow:hidden;opacity:0;transition:max-height .18s ease,opacity .15s ease,padding .18s ease;}
 .editor-wrap:focus-within .tb{max-height:28px;opacity:1;padding:2px 4px;}
 .editor-wrap{border:1.5px solid var(--br);border-radius:var(--rsm);background:#fff;transition:border-color .15s,box-shadow .15s;}
-.editor-wrap:focus-within{border-color:var(--bl);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.editor-wrap:focus-within{border-color:var(--bl);box-shadow:0 0 0 3px rgba(62,116,159,.1);}
 .tb-b{width:20px;height:20px;border:none;border-radius:3px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mt);flex-shrink:0;padding:0;}
 .tb-b:hover{background:var(--br);color:var(--tx);}
 .tb-b svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -321,7 +332,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 /* 플로팅 임시저장 버튼 */
 .float-draft{position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:200;display:none;}
 .float-draft.visible{display:flex;}
-.float-btn-save{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--bl);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.35);transition:all .15s;}
+.float-btn-save{display:flex;align-items:center;gap:7px;padding:10px 18px;background:var(--bl);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px rgba(62,116,159,.35);transition:all .15s;}
 .float-btn-save:hover{background:var(--bld);transform:translateY(-1px);}
 .float-btn-list{display:none;align-items:center;gap:6px;padding:7px 14px;background:#fff;color:var(--bld);border:1.5px solid var(--blb);border-radius:999px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .15s;}
 .float-btn-list:hover{background:var(--bll);}
@@ -329,7 +340,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .float-dot{width:7px;height:7px;background:#E24B4A;border-radius:50%;flex-shrink:0;}
 
 @media(max-width:600px){
-  .form-grid,.cpd-row{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
   .topbar{padding:0 1rem;}
   .topbar-tag{display:none;}
   .page{padding:1rem 1rem 4rem;}
@@ -349,9 +360,9 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 
 
 <!-- 암호 화면 -->
-<div id="lockScreen" style="min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2rem;background:linear-gradient(160deg,#EFF6FF 0%,#F0F9FF 55%,#F8FAFC 100%);padding:2rem;">
+<div id="lockScreen" style="min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2rem;background:linear-gradient(160deg,#F7FBFE 0%,#F5F9FD 55%,#F8FAFC 100%);padding:2rem;">
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
-    <div style="width:60px;height:60px;background:#2563EB;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;">🎧</div>
+    <div style="width:60px;height:60px;background:#3E749F;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:27px;">🎧</div>
     <div style="font-size:22px;font-weight:700;color:#0F172A;letter-spacing:-.03em;">상담사 모니터링 · 코칭 관리</div>
     <div style="font-size:14px;color:#64748B;">CX팀 아이샵케어 · 관리자 전용</div>
   </div>
@@ -362,7 +373,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
       style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px;"
       onkeydown="if(event.key==='Enter') checkLock()"/>
     <button onclick="checkLock()"
-      style="width:100%;padding:12px;background:#2563EB;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;">
+      style="width:100%;padding:12px;background:#3E749F;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;">
       입장하기
     </button>
     <div id="lockErr" style="font-size:13px;color:#991B1B;margin-top:8px;min-height:20px;"></div>
@@ -456,93 +467,28 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         <div class="card-head"><span class="card-head-title">👤 기본 정보</span></div>
         <div class="card-body">
           <div class="form-grid">
-            <div class="field"><label>날짜</label><input type="date" id="f-date" onchange="updateDailyDateLabel()"/></div>
+            <div class="field"><label>날짜</label><input type="date" id="f-date"/></div>
             <div class="field"><label>모니터링 진행자</label><input type="text" id="f-monitor" placeholder="진행자 이름"/></div>
           </div>
         </div>
       </div>
 
-      <!-- 금일 콜 수 -->
+      <!-- QA 평가표 -->
       <div class="card">
-        <div class="card-head"><span class="card-head-title">📊 금일 콜 수</span></div>
-        <div class="card-body">
-          <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;">
-            <div style="display:flex;flex-direction:column;gap:2px;">
-              <span style="font-size:12px;font-weight:700;color:var(--bld);" id="todayDayLabel">-요일</span>
-              <span style="font-size:11px;color:var(--mt);" id="todayDateLabel">-</span>
-            </div>
-            <input type="number" id="dailyCall" min="0" placeholder="0"
-              style="width:90px;padding:10px;border:1.5px solid var(--blb);border-radius:8px;font-size:22px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
-            <span style="font-size:13px;color:var(--mt);">콜</span>
-          </div>
+        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="card-head-title">📊 QA 평가</span>
         </div>
-      </div>
-
-      <!-- 통화 중 모니터링 -->
-      <div class="card">
-        <div class="card-head"><span class="card-head-title">📞 통화 중 모니터링</span></div>
-        <table class="mon-table">
-          <thead><tr><th class="col-item">체크 항목</th><th class="col-res">결과</th><th class="col-det">세부 내용</th></tr></thead>
-          <tbody id="callBody"></tbody>
-        </table>
-      </div>
-
-      <!-- 후처리 모니터링 -->
-      <div class="card">
-        <div class="card-head"><span class="card-head-title">📋 후처리 모니터링</span></div>
-        <table class="mon-table">
-          <thead><tr><th class="col-item">체크 항목</th><th class="col-res">결과</th><th class="col-det">세부 내용</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="col-item">후처리 프로세스 적절성</td>
-              <td class="col-res"><select class="res-sel ok" id="r-post" onchange="styleSelect(this)"><option value="ok">적절</option><option value="warn">보통</option><option value="bad">개선필요</option></select></td>
-              <td class="col-det"><input class="det-inp" type="text" id="d-post" placeholder="세부 내용"/></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="qa-total-bar">
+          <div class="qa-total-track"><div class="qa-total-fill" id="qaTotalFill" style="width:100%;"></div></div>
+          <span class="qa-total-badge" id="qaTotalBadge">100 / 100</span>
+        </div>
+        <div id="qaBody"></div>
       </div>
 
       <!-- 코칭 결과 -->
       <div class="card">
-        <div class="card-head"><span class="card-head-title">📈 코칭 결과 (CPD)</span></div>
+        <div class="card-head"><span class="card-head-title">📈 코칭 결과</span></div>
         <div class="card-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem;">
-
-            <!-- 평균 -->
-            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
-              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">평균</span>
-              <input type="date" id="cpd-date-before-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <span style="font-size:13px;color:var(--mt);">~</span>
-              <input type="date" id="cpd-date-before-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <input type="text" id="cpd-before" placeholder="예: 48" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
-            </div>
-
-            <!-- 2주 후 -->
-            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
-              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">2주 후</span>
-              <input type="date" id="cpd-date-2w-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <span style="font-size:13px;color:var(--mt);">~</span>
-              <input type="date" id="cpd-date-2w-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <input type="text" id="cpd-2w" placeholder="예: 58" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
-              <div style="display:flex;flex-direction:column;gap:4px;align-items:center;min-height:40px;justify-content:center;">
-                <span class="cpd-change none" id="change-2w-before">코칭 전 대비 -</span>
-              </div>
-            </div>
-
-            <!-- 1개월 후 -->
-            <div style="background:var(--bll);border:1.5px solid var(--blb);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;">
-              <span style="font-size:11px;font-weight:700;color:var(--bld);text-transform:uppercase;letter-spacing:.06em;">1개월 후</span>
-              <input type="date" id="cpd-date-1m-s" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <span style="font-size:13px;color:var(--mt);">~</span>
-              <input type="date" id="cpd-date-1m-e" style="width:100%;padding:5px 6px;border:1.5px solid var(--blb);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--tx);outline:none;"/>
-              <input type="text" id="cpd-1m" placeholder="예: 50" oninput="calcCPD()" style="width:100%;padding:10px;border:1.5px solid var(--blb);border-radius:7px;font-size:20px;font-weight:700;font-family:inherit;background:#fff;color:var(--bld);text-align:center;outline:none;"/>
-              <div style="display:flex;flex-direction:column;gap:4px;align-items:center;min-height:40px;justify-content:center;">
-                <span class="cpd-change none" id="change-1m-before">코칭 전 대비 -</span>
-                <span class="cpd-change none" id="change-1m-2w">2주 후 대비 -</span>
-              </div>
-            </div>
-
-          </div>
           <div style="display:grid;gap:14px;">
             <div class="field"><label>코칭 내용</label>
               <div class="editor-wrap"><div class="tb" id="tb-coaching"></div><div class="ea" id="f-coaching" contenteditable="true" data-ph="코칭 내용을 입력하세요"></div></div></div>
@@ -600,23 +546,48 @@ function normalizeResult(v) {
   return "ok";
 }
 
-const CALL_ITEMS = [
-  "오프닝 구간 적절성",
-  "경청 태도",
-  "니즈 파악 정확도",
-  "응대 중 공백 구간 발생",
-  "결론 중심 응대 여부",
-  "클로징 멘트 적절성"
+const QA_ITEMS = [
+  {cat:"기본 응대 및 음성 품질", max:3, name:"표준 첫인사 준수"},
+  {cat:"기본 응대 및 음성 품질", max:4, name:"표준 끝인사 및 통화 종료 가이드"},
+  {cat:"기본 응대 및 음성 품질", max:4, name:"불필요한 추임새"},
+  {cat:"기본 응대 및 음성 품질", max:3, name:"음성 품질 및 발음 정돈"},
+  {cat:"기본 응대 및 음성 품질", max:3, name:"기분 및 감정이 실린 어조"},
+  {cat:"기본 응대 및 음성 품질", max:3, name:"경청 태도"},
+  {cat:"대기 및 통화 관리", max:3, name:"대기 양해 멘트 구사"},
+  {cat:"대기 및 통화 관리", max:4, name:"통화 중 공백 및 대기시간 관리"},
+  {cat:"대기 및 통화 관리", max:3, name:"대기 종료 후 감사 표현"},
+  {cat:"본인 및 정보 확인", max:5, name:"필수 본인/매장 정보 식별"},
+  {cat:"본인 및 정보 확인", max:5, name:"이전 상담 이력 확인"},
+  {cat:"상황 진단 및 공감", max:5, name:"고객 니즈 및 공감, 문의 핵심 파악"},
+  {cat:"상황 진단 및 공감", max:5, name:"동문서답 방지"},
+  {cat:"전문적 안내 및 지식", max:5, name:"정확한 지식 기반 안내"},
+  {cat:"전문적 안내 및 지식", max:5, name:"추측성 단정 위험"},
+  {cat:"전문적 안내 및 지식", max:5, name:"구조적/기술적 한계 사유 설명"},
+  {cat:"전문적 안내 및 지식", max:5, name:"방어적/법적 대립 발화 금지"},
+  {cat:"응대 태도 및 어법", max:5, name:"책임 전가 및 고객 비난 발화 금지"},
+  {cat:"응대 태도 및 어법", max:4, name:"불필요한 감정적 대립 금지"},
+  {cat:"응대 태도 및 어법", max:4, name:"책임감 있는 주도적 화법 구사"},
+  {cat:"응대 태도 및 어법", max:4, name:"핑계와 둘러대기식 해명 지양"},
+  {cat:"응대 태도 및 어법", max:3, name:"최초 통화자의 감정 케어 및 정중한 사과"},
+  {cat:"해결책 제시 및 사후 관리", max:4, name:"단계별 대안 및 협의안 제시"},
+  {cat:"해결책 제시 및 사후 관리", max:3, name:"담당 부서 및 외부기관 연계 안내"},
+  {cat:"해결책 제시 및 사후 관리", max:3, name:"상담 이력 기재"}
 ];
+const QA_MAX_TOTAL = QA_ITEMS.reduce((s, it) => s + it.max, 0);
+
+function qaScoreClass(score, max) {
+  if (score >= max) return "full";
+  if (score <= 0) return "zero";
+  return "partial";
+}
 
 let currentMember = null;
 let allMembers    = [];
 
 /* ── 초기화 ── */
 async function initAfterAuth() {
-  buildCallRows();
+  buildQaBody();
   setToday();
-  buildDailyGrid();
   initEditors();
   await loadMembers();
   showSelect();
@@ -706,7 +677,7 @@ async function loadHistory() {
   list.innerHTML = `<div class="history-empty">기록 불러오는 중...</div>`;
 
   try {
-    const url  = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/코칭기록!A2:AC1000?key=${API_KEY}`;
+    const url  = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/코칭기록!A2:BG1000?key=${API_KEY}`;
     const res  = await fetch(url);
     const data = await res.json();
     const rows = (data.values || []).filter(r => (r[0]||"").trim() === currentMember.name);
@@ -719,49 +690,40 @@ async function loadHistory() {
     }
 
     rows.sort((a, b) => (b[2] || "").localeCompare(a[2] || ""));
-    const statCPD = document.getElementById("statCPD"); if (statCPD && rows[0][18]) statCPD.textContent = rows[0][18];
 
     list.innerHTML = rows.map((r, idx) => {
-      const issues = CALL_ITEMS.map((item, i) => ({ item, val: normalizeResult(r[4 + i * 2]) })).filter(x => x.val !== "ok");
-      const badges = issues.length === 0
-        ? `<span class="badge b-ok">✅ 전체 문제없음</span>`
-        : issues.slice(0, 4).map(x =>
-            `<span class="badge ${x.val === "bad" ? "b-bad" : "b-warn"}">${x.item}: ${x.val === "bad" ? "개선필요" : "보통"}</span>`
-          ).join("");
+      const qaVals = QA_ITEMS.map((item, i) => {
+        const raw = Number(r[4 + i * 2]);
+        const score = isNaN(raw) ? item.max : raw;
+        return { ...item, score, memo: r[5 + i * 2] || "" };
+      });
+      const totalScore = Number(r[4 + QA_ITEMS.length * 2]);
+      const totalDisp = isNaN(totalScore) ? qaVals.reduce((s,x)=>s+x.score,0) : totalScore;
+      const deducted = qaVals.filter(x => x.score < x.max);
+      const badges = `<span class="badge b-ok">총점 ${totalDisp} / ${QA_MAX_TOTAL}</span>` +
+        (deducted.length === 0
+          ? ""
+          : deducted.slice(0, 3).map(x =>
+              `<span class="badge ${x.score === 0 ? "b-bad" : "b-warn"}">${x.name}: ${x.score}/${x.max}</span>`
+            ).join(""));
 
-      // 상세 — 통화 모니터링 행
-      const callRows = CALL_ITEMS.map((item, i) => {
-        const res = normalizeResult(r[4 + i * 2]);
-        const detRaw = r[5 + i * 2] || "";
-        const det = detRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
-        const cls = res === "ok" ? "dr-ok" : res === "warn" ? "dr-warn" : "dr-bad";
-        const lbl = res === "ok" ? "문제없음" : res === "warn" ? "보통" : "개선필요";
-        return `<tr><td class="dt-item">${item}</td><td><span class="detail-result ${cls}">${lbl}</span></td><td style="color:var(--mt);font-size:12px;">${det}</td></tr>`;
+      // 상세 — QA 항목 행 (카테고리별 그룹)
+      let lastCat = null;
+      const qaRows = qaVals.map(x => {
+        let head = "";
+        if (x.cat !== lastCat) {
+          head = `<tr><td colspan="2" style="font-weight:700;background:#FAFBFC;padding-top:10px;">${x.cat}</td></tr>`;
+          lastCat = x.cat;
+        }
+        const cls = x.score >= x.max ? "dr-ok" : x.score === 0 ? "dr-bad" : "dr-warn";
+        return `${head}<tr><td class="dt-item">${x.name}</td><td><span class="detail-result ${cls}">${x.score} / ${x.max}</span>${x.memo ? ` <span style="color:var(--mt);font-size:12px;">· ${x.memo}</span>` : ""}</td></tr>`;
       }).join("");
 
-      const postRes = normalizeResult(r[16]);
-      const postDetRaw = r[17] || "";
-      const postDet = postDetRaw.replace(/^(ok|bad|warn)$/i, "").trim() || "-";
-      const postCls = postRes === "ok" ? "dr-ok" : postRes === "warn" ? "dr-warn" : "dr-bad";
-      const postLbl = postRes === "ok" ? "적절" : postRes === "warn" ? "보통" : "개선필요";
+      const coaching  = r[4 + QA_ITEMS.length * 2 + 1] || "";
+      const feedback  = r[4 + QA_ITEMS.length * 2 + 2] || "";
+      const note      = r[4 + QA_ITEMS.length * 2 + 3] || "";
 
-      // CPD
-      const cpdb = parseFloat(r[18]);
-      const cpd2 = parseFloat(r[19]);
-      const cpd1 = parseFloat(r[20]);
-      function cpdPct(base, val) {
-        if (isNaN(base) || isNaN(val)) return "";
-        const p = ((val - base) / base * 100).toFixed(1);
-        const up = val >= base;
-        return `<div class="cpd-s-chg ${up ? "chg-up" : "chg-dn"}">${up ? "▲ +" : "▼ "}${p}%</div>`;
-      }
-
-      const dailyCalls = r[27] || "";
-      const coaching  = r[21] || "";
-      const feedback  = r[22] || "";
-      const note      = r[23] || "";
-
-      const ukey = r[28] || r[2] + '_' + idx;
+      const ukey = r[4 + QA_ITEMS.length * 2 + 4] || r[2] + '_' + idx;
       return `
         <div class="hist-item-wrap" data-date="${r[2] || ''}" data-key="${ukey}">
         <div class="hist-item">
@@ -779,37 +741,11 @@ async function loadHistory() {
             </div>
             <div class="detail-view" id="dview-${idx}" style="padding:0 16px 16px;">
               <div class="detail-section">
-                <div class="detail-label">통화 중 모니터링</div>
+                <div class="detail-label">QA 평가 (총점 ${totalDisp} / ${QA_MAX_TOTAL})</div>
                 <table class="detail-table">
-                  ${callRows}
-                  <tr><td class="dt-item">후처리 적절성</td><td><span class="detail-result ${postCls}">${postLbl}</span></td><td style="color:var(--mt);font-size:12px;">${postDet}</td></tr>
+                  ${qaRows}
                 </table>
               </div>
-              ${dailyCalls ? `<div class="detail-section"><div class="detail-label">📊 금일 콜 수</div><div style="font-size:18px;font-weight:700;color:var(--bld);padding:6px 0;">${dailyCalls} 콜</div></div>` : ""}
-            ${(!isNaN(cpdb) || !isNaN(cpd2) || !isNaN(cpd1)) ? `
-              <div class="detail-section">
-                <div class="detail-label">CPD (콜량)</div>
-                <div class="cpd-summary">
-                  <div class="cpd-s-card">
-                    <div class="cpd-s-lbl">평균 CPD</div>
-                    ${r[24] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[24]}</div>` : ""}
-                    <div class="cpd-s-val">${isNaN(cpdb) ? "-" : cpdb}</div>
-                  </div>
-                  <div class="cpd-s-card">
-                    <div class="cpd-s-lbl">2주 후 CPD</div>
-                    ${r[25] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[25]}</div>` : ""}
-                    <div class="cpd-s-val">${isNaN(cpd2) ? "-" : cpd2}</div>
-                    ${cpdPct(cpdb, cpd2)}
-                  </div>
-                  <div class="cpd-s-card">
-                    <div class="cpd-s-lbl">1개월 후 CPD</div>
-                    ${r[26] ? `<div style="font-size:10px;color:var(--mt);margin-bottom:3px;">${r[26]}</div>` : ""}
-                    <div class="cpd-s-val">${isNaN(cpd1) ? "-" : cpd1}</div>
-                    ${cpdPct(cpdb, cpd1)}
-                    <div class="cpd-s-chg" style="font-size:10px;color:var(--mt);">2주 후 대비: ${isNaN(cpd2)||isNaN(cpd1)?"-":(((cpd1-cpd2)/cpd2*100)>=0?"▲ +":"▼ ")+(isNaN(cpd2)||isNaN(cpd1)?"":(((cpd1-cpd2)/cpd2*100).toFixed(1))+"%")}</div>
-                  </div>
-                </div>
-              </div>` : ""}
               ${coaching ? `<div class="detail-section"><div class="detail-label">코칭 내용</div><div class="detail-text" style="white-space:pre-wrap;">${coaching}</div></div>` : ""}
               ${feedback ? `<div class="detail-section"><div class="detail-label">추후 피드백 예정</div><div class="detail-text" style="white-space:pre-wrap;">${feedback}</div></div>` : ""}
               ${note ? `<div class="detail-section"><div class="detail-label">비고</div><div class="detail-text" style="white-space:pre-wrap;">${note}</div></div>` : ""}
@@ -824,28 +760,17 @@ async function loadHistory() {
               </div>
               <div class="edit-body">
                 <div>
-                  <div class="detail-label" style="margin-bottom:8px;">통화 중 모니터링</div>
+                  <div class="detail-label" style="margin-bottom:8px;">QA 평가</div>
                   <table class="edit-tbl">
-                    <thead><tr><th style="width:30%">항목</th><th style="width:22%">결과</th><th>세부 내용</th></tr></thead>
+                    <thead><tr><th style="width:44%">항목</th><th style="width:18%">점수</th><th>메모</th></tr></thead>
                     <tbody>
-                      ${CALL_ITEMS.map((item, i) => `<tr>
-                        <td>${item}</td>
-                        <td><select class="res-sel ${normalizeResult(r[4+i*2])}" id="em-r-${idx}-${i}" onchange="styleSelect(this)">
-                          <option value="ok" ${normalizeResult(r[4+i*2])==='ok'?'selected':''}>문제없음</option>
-                          <option value="warn" ${normalizeResult(r[4+i*2])==='warn'?'selected':''}>보통</option>
-                          <option value="bad" ${normalizeResult(r[4+i*2])==='bad'?'selected':''}>개선필요</option>
+                      ${qaVals.map((x, i) => `<tr>
+                        <td>${x.name}<div style="font-size:10px;color:var(--mt);">${x.cat} · 배점 ${x.max}</div></td>
+                        <td><select class="qa-score-sel ${qaScoreClass(x.score, x.max)}" id="em-qa-${idx}-${i}" data-max="${x.max}" onchange="this.className='qa-score-sel '+qaScoreClass(Number(this.value),${x.max})">
+                          ${Array.from({length:x.max+1},(_,v)=>x.max-v).map(v=>`<option value="${v}" ${v===x.score?'selected':''}>${v}</option>`).join('')}
                         </select></td>
-                        <td><input class="edit-inp" type="text" id="em-d-${idx}-${i}" value="${(r[5+i*2]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
+                        <td><input class="edit-inp" type="text" id="em-qa-memo-${idx}-${i}" value="${x.memo}" placeholder="사유(선택)"/></td>
                       </tr>`).join('')}
-                      <tr>
-                        <td>후처리 적절성</td>
-                        <td><select class="res-sel ${normalizeResult(r[16])}" id="em-post-r-${idx}" onchange="styleSelect(this)">
-                          <option value="ok" ${normalizeResult(r[16])==='ok'?'selected':''}>적절</option>
-                          <option value="warn" ${normalizeResult(r[16])==='warn'?'selected':''}>보통</option>
-                          <option value="bad" ${normalizeResult(r[16])==='bad'?'selected':''}>개선필요</option>
-                        </select></td>
-                        <td><input class="edit-inp" type="text" id="em-post-d-${idx}" value="${(r[17]||'').replace(/^(ok|bad|warn)$/i,'').trim()}"/></td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -885,18 +810,11 @@ async function saveRecord() {
     squad:     currentMember.squad,
     date:      document.getElementById("f-date").value,
     monitor:   document.getElementById("f-monitor").value,
-    calls:     CALL_ITEMS.map((_, i) => ({
-      result: document.getElementById(`r-${i}`).value,
-      detail: document.getElementById(`d-${i}`).value
+    qa:        QA_ITEMS.map((item, i) => ({
+      score: Number(document.getElementById(`qa-score-${i}`)?.value) || 0,
+      memo:  document.getElementById(`qa-memo-${i}`)?.value || ""
     })),
-    post:      { result: document.getElementById("r-post").value, detail: document.getElementById("d-post").value },
-    cpdBefore:     document.getElementById("cpd-before").value,
-    cpd2w:         document.getElementById("cpd-2w").value,
-    cpd1m:         document.getElementById("cpd-1m").value,
-    cpdDateBefore: (document.getElementById("cpd-date-before-s").value && document.getElementById("cpd-date-before-e").value) ? document.getElementById("cpd-date-before-s").value + " ~ " + document.getElementById("cpd-date-before-e").value : document.getElementById("cpd-date-before-s").value || "",
-    cpdDate2w:     (document.getElementById("cpd-date-2w-s").value && document.getElementById("cpd-date-2w-e").value) ? document.getElementById("cpd-date-2w-s").value + " ~ " + document.getElementById("cpd-date-2w-e").value : document.getElementById("cpd-date-2w-s").value || "",
-    cpdDate1m:     (document.getElementById("cpd-date-1m-s").value && document.getElementById("cpd-date-1m-e").value) ? document.getElementById("cpd-date-1m-s").value + " ~ " + document.getElementById("cpd-date-1m-e").value : document.getElementById("cpd-date-1m-s").value || "",
-    dailyCalls: document.getElementById("dailyCall")?.value || "",
+    totalScore: QA_ITEMS.reduce((s, item, i) => s + (Number(document.getElementById(`qa-score-${i}`)?.value) || 0), 0),
     coaching:   document.getElementById("f-coaching").innerText,
     feedback:   document.getElementById("f-feedback").innerText,
     note:       document.getElementById("f-note").innerText,
@@ -929,17 +847,52 @@ function initEditors() {
   mkToolbar("tb-note","f-note");
 }
 
-function buildCallRows() {
-  document.getElementById("callBody").innerHTML = CALL_ITEMS.map((item, i) => `
-    <tr>
-      <td class="col-item">${item}</td>
-      <td class="col-res"><select class="res-sel ok" id="r-${i}" onchange="styleSelect(this)">
-        <option value="ok">문제없음</option>
-        <option value="warn">보통</option>
-        <option value="bad">개선필요</option>
-      </select></td>
-      <td class="col-det"><input class="det-inp" type="text" id="d-${i}" placeholder="세부 내용"/></td>
-    </tr>`).join("");
+function buildQaBody() {
+  let html = "";
+  let lastCat = null;
+  QA_ITEMS.forEach((item, i) => {
+    if (item.cat !== lastCat) {
+      if (lastCat !== null) html += `</div>`;
+      const catMax = QA_ITEMS.filter(x => x.cat === item.cat).reduce((s, x) => s + x.max, 0);
+      html += `<div class="qa-cat"><div class="qa-cat-head"><span>${item.cat}</span><span class="qa-cat-max">${catMax}점</span></div>`;
+      lastCat = item.cat;
+    }
+    html += `
+      <div class="qa-item">
+        <div class="qa-item-top">
+          <span class="qa-item-name">${item.name}</span>
+          <select class="qa-score-sel full" id="qa-score-${i}" data-max="${item.max}" onchange="onQaScoreChange(${i})">
+            ${Array.from({length:item.max+1},(_,v)=>item.max-v).map(v=>`<option value="${v}" ${v===item.max?'selected':''}>${v} / ${item.max}</option>`).join('')}
+          </select>
+        </div>
+        <input type="text" class="qa-memo hidden" id="qa-memo-${i}" placeholder="감점 사유를 입력하세요"/>
+      </div>`;
+  });
+  html += `</div>`;
+  document.getElementById("qaBody").innerHTML = html;
+  updateQaTotal();
+}
+
+function onQaScoreChange(i) {
+  const sel  = document.getElementById(`qa-score-${i}`);
+  const memo = document.getElementById(`qa-memo-${i}`);
+  const max  = Number(sel.dataset.max);
+  const val  = Number(sel.value);
+  sel.className = "qa-score-sel " + qaScoreClass(val, max);
+  if (memo) memo.classList.toggle("hidden", val >= max);
+  updateQaTotal();
+}
+
+function updateQaTotal() {
+  let total = 0;
+  QA_ITEMS.forEach((item, i) => {
+    const sel = document.getElementById(`qa-score-${i}`);
+    if (sel) total += Number(sel.value) || 0;
+  });
+  const badge = document.getElementById("qaTotalBadge");
+  if (badge) badge.textContent = `${total} / ${QA_MAX_TOTAL}`;
+  const fill = document.getElementById("qaTotalFill");
+  if (fill) fill.style.width = Math.min(100, (total / QA_MAX_TOTAL * 100)) + "%";
 }
 
 function styleSelect(sel) {
@@ -1101,12 +1054,11 @@ async function saveEditMode(idx) {
   btn.textContent = "저장 중...";
   btn.disabled = true;
 
-  const calls = CALL_ITEMS.map((_,i) => ({
-    result: document.getElementById(`em-r-${idx}-${i}`).value,
-    detail: document.getElementById(`em-d-${idx}-${i}`).value
+  const qa = QA_ITEMS.map((item, i) => ({
+    score: Number(document.getElementById(`em-qa-${idx}-${i}`).value) || 0,
+    memo:  document.getElementById(`em-qa-memo-${idx}-${i}`).value || ""
   }));
-  const postR = document.getElementById(`em-post-r-${idx}`).value;
-  const postD = document.getElementById(`em-post-d-${idx}`).value;
+  const totalScore = qa.reduce((s, x) => s + x.score, 0);
   const coaching = document.getElementById(`em-coaching-${idx}`).innerText;
   const feedback = document.getElementById(`em-feedback-${idx}`).innerText;
   const note = document.getElementById(`em-note-${idx}`).innerText;
@@ -1122,11 +1074,9 @@ async function saveEditMode(idx) {
     squad:     currentMember.squad,
     date:      date,
     monitor:   "",
-    calls,
-    post:      { result: postR, detail: postD },
-    coaching, feedback, note,
-    cpdBefore: "", cpd2w: "", cpd1m: "",
-    cpdDateBefore: "", cpdDate2w: "", cpdDate1m: ""
+    qa,
+    totalScore,
+    coaching, feedback, note
   };
 
   try {
@@ -1153,52 +1103,6 @@ function toggleHist(idx) {
   chev.classList.toggle("open", open);
 }
 
-function calcCPD() {
-  const before = parseFloat(document.getElementById("cpd-before").value);
-  const w2     = parseFloat(document.getElementById("cpd-2w").value);
-  const m1     = parseFloat(document.getElementById("cpd-1m").value);
-
-  function setChange(elId, base, val, label) {
-    const el = document.getElementById(elId);
-    if (!el) return;
-    if (isNaN(base) || isNaN(val)) {
-      el.textContent = label + " -"; el.className = "cpd-change none"; return;
-    }
-    const pct = ((val - base) / base * 100).toFixed(1);
-    const isUp = val >= base;
-    el.textContent = label + " " + (isUp ? "▲ +" : "▼ ") + pct + "%";
-    el.className = "cpd-change " + (isUp ? "up" : "down");
-  }
-
-  setChange("change-2w-before",  before, w2, "코칭 전 대비");
-  setChange("change-1m-before",  before, m1, "코칭 전 대비");
-  setChange("change-1m-2w",      w2,     m1, "2주 후 대비");
-}
-
-/* 금일 콜수 */
-function buildDailyGrid() {
-  updateDailyDateLabel();
-}
-
-function updateDailyDateLabel() {
-  const dateVal = document.getElementById("f-date")?.value;
-  let d;
-  if (dateVal) {
-    const [y,m,dd] = dateVal.split("-").map(Number);
-    d = new Date(y, m-1, dd);
-  } else {
-    d = new Date();
-  }
-  const days = ["일","월","화","수","목","금","토"];
-  const dayLabel = document.getElementById("todayDayLabel");
-  const dateLabel = document.getElementById("todayDateLabel");
-  const yy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const dd2 = String(d.getDate()).padStart(2,"0");
-  if (dayLabel) dayLabel.textContent = days[d.getDay()] + "요일";
-  if (dateLabel) dateLabel.textContent = `${yy}-${mm}-${dd2}`;
-}
-
 function setToday() {
   const el = document.getElementById("f-date");
   if (el) {
@@ -1208,27 +1112,15 @@ function setToday() {
     const dd = String(t.getDate()).padStart(2,"0");
     el.value = yy+"-"+mm+"-"+dd;
   }
-  updateDailyDateLabel();
 }
 
 function resetForm() {
   setToday();
   document.getElementById("f-monitor").value = "";
-  CALL_ITEMS.forEach((_, i) => {
-    const s = document.getElementById("r-" + i);
-    if (s) { s.value = "ok"; s.className = "res-sel ok"; }
-    const d = document.getElementById("d-" + i);
-    if (d) d.value = "";
-  });
-  const rp = document.getElementById("r-post"); if (rp) { rp.value = "ok"; rp.className = "res-sel ok"; }
-  const dp = document.getElementById("d-post"); if (dp) dp.value = "";
-  ["cpd-before","cpd-2w","cpd-1m","cpd-date-before-s","cpd-date-before-e","cpd-date-2w-s","cpd-date-2w-e","cpd-date-1m-s","cpd-date-1m-e"].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = "";
-  });
+  buildQaBody();
   ["f-coaching","f-feedback","f-note"].forEach(id => {
     const el = document.getElementById(id); if (el) el.innerText = "";
   });
-  const dc=document.getElementById("dailyCall");if(dc)dc.value="";
 }
 
 function switchTab(id, btn) {
@@ -1261,13 +1153,6 @@ function saveDraft() {
     coaching: document.getElementById("f-coaching")?.innerHTML || "",
     feedback: document.getElementById("f-feedback")?.innerHTML || "",
     note:     document.getElementById("f-note")?.innerHTML || "",
-    cpdBefore:     document.getElementById("cpd-before")?.value || "",
-    cpd2w:         document.getElementById("cpd-2w")?.value || "",
-    cpd1m:         document.getElementById("cpd-1m")?.value || "",
-    cpdDateBefore: [document.getElementById("cpd-date-before-s")?.value, document.getElementById("cpd-date-before-e")?.value].filter(Boolean).join(" ~ "),
-    cpdDate2w:     [document.getElementById("cpd-date-2w-s")?.value, document.getElementById("cpd-date-2w-e")?.value].filter(Boolean).join(" ~ "),
-    cpdDate1m:     [document.getElementById("cpd-date-1m-s")?.value, document.getElementById("cpd-date-1m-e")?.value].filter(Boolean).join(" ~ "),
-    dailyCall: document.getElementById("dailyCall")?.value || "",
     savedAt:   new Date().toLocaleString("ko-KR")
   };
   const drafts = getDrafts();
@@ -1287,10 +1172,6 @@ function loadDraftById(id) {
   if (d.coaching) { const el=document.getElementById("f-coaching"); if(el) el.innerHTML=d.coaching; }
   if (d.feedback) { const el=document.getElementById("f-feedback"); if(el) el.innerHTML=d.feedback; }
   if (d.note)     { const el=document.getElementById("f-note"); if(el) el.innerHTML=d.note; }
-  if (d.cpdBefore){ const el=document.getElementById("cpd-before"); if(el) el.value=d.cpdBefore; }
-  if (d.cpd2w)    { const el=document.getElementById("cpd-2w"); if(el) el.value=d.cpd2w; }
-  if (d.cpd1m)    { const el=document.getElementById("cpd-1m"); if(el) el.value=d.cpd1m; }
-  if (d.dailyCall){ const el=document.getElementById("dailyCall"); if(el) el.value=d.dailyCall; }
   switchTab("new", document.querySelectorAll(".tab-btn")[0]);
   toggleDraftSidebar(false);
   showToast("📋 임시저장 내용을 불러왔어요!", false);
