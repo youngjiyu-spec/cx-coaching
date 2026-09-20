@@ -280,35 +280,11 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .btn-save:disabled{background:#CBD5E1;cursor:not-allowed;}
 .btn-reset{padding:13px 22px;background:#fff;color:var(--mt);border:1.5px solid var(--br);border-radius:var(--rsm);font-size:14px;font-family:inherit;cursor:pointer;transition:background .15s;}
 .btn-reset:hover{background:var(--bg);}
-/* 슬림 에디터 툴바 */
-.tb{display:flex;align-items:center;gap:1px;flex-wrap:nowrap;padding:0 4px;border-bottom:1px solid var(--br);background:#FAFAFA;max-height:0;overflow:hidden;opacity:0;transition:max-height .18s ease,opacity .15s ease,padding .18s ease;}
-.editor-wrap:focus-within .tb{max-height:28px;opacity:1;padding:2px 4px;}
-.editor-wrap{border:1.5px solid var(--br);border-radius:var(--rsm);background:#fff;transition:border-color .15s,box-shadow .15s;}
-.editor-wrap:focus-within{border-color:var(--bl);box-shadow:0 0 0 3px rgba(62,116,159,.1);}
-.tb-b{width:20px;height:20px;border:none;border-radius:3px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--mt);flex-shrink:0;padding:0;}
-.tb-b:hover{background:var(--br);color:var(--tx);}
-.tb-b svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.tb-bold{font-weight:700;font-family:Georgia,serif;}
-.tb-ital{font-style:italic;font-family:Georgia,serif;}
-.tb-und{text-decoration:underline;font-size:10px;}
-.tb-str{text-decoration:line-through;font-size:10px;}
-.tb-sep{width:1px;height:12px;background:var(--br);margin:0 2px;flex-shrink:0;}
+/* 코칭 내용 입력창 */
+.text-area{width:100%;min-height:90px;padding:9px 11px;border:1.5px solid var(--br);border-radius:var(--rsm);background:#fff;outline:none;font-size:14px;line-height:1.7;color:var(--tx);font-family:inherit;resize:vertical;transition:border-color .15s,box-shadow .15s;}
+.text-area:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(62,116,159,.1);}
+.text-area::placeholder{color:#CBD5E1;}
 
-.cw{position:relative;flex-shrink:0;}
-.ct{width:20px;height:20px;border:none;border-radius:3px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;}
-.ct:hover{background:var(--br);}
-.ct-a{font-size:11px;font-weight:700;color:var(--tx);line-height:1;}
-.ct-bar{width:11px;height:2px;border-radius:1px;}
-.pal{display:none;position:absolute;top:24px;left:0;background:#fff;border:1px solid var(--br);border-radius:8px;padding:7px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:300;width:142px;}
-.pal.show{display:block;}
-.pal-title{font-size:9px;color:var(--mt);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
-.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.cd{width:15px;height:15px;border-radius:3px;cursor:pointer;border:1.5px solid transparent;transition:transform .1s;}
-.cd:hover{transform:scale(1.2);border-color:rgba(0,0,0,.2);}
-.ea{min-height:78px;padding:8px 11px;outline:none;font-size:14px;line-height:1.75;color:var(--tx);font-family:inherit;}
-.ea:empty::before{content:attr(data-ph);color:#CBD5E1;pointer-events:none;}
-.ea ul{padding-left:1.2em;list-style:disc;}
-.ea ol{padding-left:1.2em;list-style:decimal;}
 .toast{margin-top:1rem;padding:12px 16px;border-radius:var(--rsm);font-size:14px;font-weight:500;display:none;align-items:center;gap:8px;}
 .toast.ok {background:var(--gn);color:var(--gnt);border:1px solid var(--gnb);}
 .toast.err{background:var(--rd);color:var(--rdt);border:1px solid var(--rdb);}
@@ -349,6 +325,7 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
   .member-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -491,10 +468,11 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
         <div class="card-body">
           <div style="display:grid;gap:14px;">
             <div class="field"><label>코칭 내용</label>
-              <div class="editor-wrap"><div class="tb" id="tb-coaching"></div><div class="ea" id="f-coaching" contenteditable="true" data-ph="코칭 내용을 입력하세요"></div></div></div>
+              <textarea class="text-area" id="f-coaching" placeholder="코칭 내용을 입력하세요"></textarea></div>
             <div class="field"><label>추후 피드백 예정</label>
-              <div class="editor-wrap"><div class="tb" id="tb-feedback"></div><div class="ea" id="f-feedback" contenteditable="true" data-ph="추후 피드백 예정 내용"></div></div></div>
-            <div class="field"><label>비고</label><div class="editor-wrap"><div class="tb" id="tb-note"></div><div class="ea" id="f-note" contenteditable="true" data-ph="기타 메모사항"></div></div></div>
+              <textarea class="text-area" id="f-feedback" placeholder="추후 피드백 예정 내용"></textarea></div>
+            <div class="field"><label>비고</label>
+              <textarea class="text-area" id="f-note" placeholder="기타 메모사항"></textarea></div>
           </div>
           <div class="action-bar">
             <button class="btn-save" id="saveBtn" onclick="saveRecord()">
@@ -583,12 +561,12 @@ function qaScoreClass(score, max) {
 
 let currentMember = null;
 let allMembers    = [];
+let historyRowsCache = [];
 
 /* ── 초기화 ── */
 async function initAfterAuth() {
   buildQaBody();
   setToday();
-  initEditors();
   await loadMembers();
   showSelect();
 }
@@ -690,6 +668,7 @@ async function loadHistory() {
     }
 
     rows.sort((a, b) => (b[2] || "").localeCompare(a[2] || ""));
+    historyRowsCache = rows;
 
     list.innerHTML = rows.map((r, idx) => {
       const qaVals = QA_ITEMS.map((item, i) => {
@@ -738,6 +717,7 @@ async function loadHistory() {
             <div class="hist-action-bar">
               <button class="btn-delete" onclick="deleteRecord('${ukey}', '${r[2]||''}', ${idx}, event)">🗑 삭제</button>
               <button class="btn-edit" onclick="openEditMode(${idx}, event)">✏️ 수정</button>
+              <button class="btn-edit" onclick="downloadPdf(${idx}, event)">📄 PDF 저장</button>
             </div>
             <div class="detail-view" id="dview-${idx}" style="padding:0 16px 16px;">
               <div class="detail-section">
@@ -775,13 +755,13 @@ async function loadHistory() {
                   </table>
                 </div>
                 <div class="field"><label>코칭 내용</label>
-                  <div class="editor-wrap"><div class="tb" id="em-tb-c-${idx}"></div><div class="ea" id="em-coaching-${idx}" contenteditable="true" data-ph="코칭 내용">${coaching}</div></div>
+                  <textarea class="text-area" id="em-coaching-${idx}" placeholder="코칭 내용">${coaching}</textarea>
                 </div>
                 <div class="field"><label>추후 피드백 예정</label>
-                  <div class="editor-wrap"><div class="tb" id="em-tb-f-${idx}"></div><div class="ea" id="em-feedback-${idx}" contenteditable="true" data-ph="추후 피드백 예정 내용">${feedback}</div></div>
+                  <textarea class="text-area" id="em-feedback-${idx}" placeholder="추후 피드백 예정 내용">${feedback}</textarea>
                 </div>
                 <div class="field"><label>비고</label>
-                  <div class="editor-wrap"><div class="tb" id="em-tb-n-${idx}"></div><div class="ea" id="em-note-${idx}" contenteditable="true" data-ph="기타 메모사항">${note}</div></div>
+                  <textarea class="text-area" id="em-note-${idx}" placeholder="기타 메모사항">${note}</textarea>
                 </div>
               </div>
             </div>
@@ -815,9 +795,9 @@ async function saveRecord() {
       memo:  document.getElementById(`qa-memo-${i}`)?.value || ""
     })),
     totalScore: QA_ITEMS.reduce((s, item, i) => s + (Number(document.getElementById(`qa-score-${i}`)?.value) || 0), 0),
-    coaching:   document.getElementById("f-coaching").innerText,
-    feedback:   document.getElementById("f-feedback").innerText,
-    note:       document.getElementById("f-note").innerText,
+    coaching:   document.getElementById("f-coaching").value,
+    feedback:   document.getElementById("f-feedback").value,
+    note:       document.getElementById("f-note").value,
     uniqueKey:  Date.now() + "_" + Math.random().toString(36).slice(2, 7)
   };
 
@@ -841,11 +821,6 @@ async function saveRecord() {
 }
 
 /* ── 유틸 ── */
-function initEditors() {
-  mkToolbar("tb-coaching","f-coaching");
-  mkToolbar("tb-feedback","f-feedback");
-  mkToolbar("tb-note","f-note");
-}
 
 function buildQaBody() {
   let html = "";
@@ -905,86 +880,6 @@ document.addEventListener("change", function(e) {
   }
 });
 
-/* ── 미니 에디터 툴바 ── */
-const EDITOR_FC = ["#0F172A","#64748B","#E24B4A","#D85A30","#BA7517","#3B6D11","#185FA5","#534AB7","#993556","#065F46","#854F0B","#BFDBFE","#A7F3D0","#FCD34D"];
-const EDITOR_BC = ["#ffffff","#FEF2F2","#FFFBEB","#ECFDF5","#EFF6FF","#F5F3FF","#FDF2F8","#F1F5F9","#FFF7ED","#F0FDF4","#FAFAFA","#E0F2FE","#FCE7F3","#FEF9C3"];
-
-function mkToolbar(tbId, areaId) {
-  const tb = document.getElementById(tbId);
-  if (!tb) return;
-  const uid = tbId.replace(/[^a-z0-9]/gi,"_");
-  tb.innerHTML = `
-    <button class="tb-b tb-bold" onclick="edCmd('bold','${areaId}')" title="굵게">B</button>
-    <button class="tb-b tb-ital" onclick="edCmd('italic','${areaId}')" title="기울임">I</button>
-    <button class="tb-b tb-und"  onclick="edCmd('underline','${areaId}')" title="밑줄">U</button>
-    <button class="tb-b tb-str"  onclick="edCmd('strikeThrough','${areaId}')" title="취소선">S</button>
-    <div class="tb-sep"></div>
-    <div style="display:flex;align-items:center;gap:1px;flex-shrink:0;" title="글자 크기">
-      <button class="tb-b" style="width:18px;font-size:13px;line-height:1;" onclick="adjSz('${uid}_fs','${areaId}',-1)">−</button>
-      <input type="number" id="${uid}_fs" value="16" min="1" max="100"
-        style="width:30px;height:20px;border:1px solid var(--br);border-radius:3px;background:#fff;font-size:11px;color:var(--tx);text-align:center;outline:none;padding:0;font-family:inherit;"
-        onblur="applyPxSize('${uid}_fs','${areaId}')"
-        onkeydown="if(event.key==='Enter')applyPxSize('${uid}_fs','${areaId}')"/>
-      <button class="tb-b" style="width:18px;font-size:13px;line-height:1;" onclick="adjSz('${uid}_fs','${areaId}',1)">+</button>
-    </div>
-    <div class="tb-sep"></div>
-    <div class="cw">
-      <button class="ct" onclick="togglePal('${uid}_fp')" title="글자 색상">
-        <span class="ct-a" style="color:#E24B4A;">A</span>
-        <div class="ct-bar" id="${uid}_fb" style="background:#E24B4A;"></div>
-      </button>
-      <div class="pal" id="${uid}_fp">
-        <div class="pal-title">글자 색상</div>
-        <div class="cg" id="${uid}_fcg"></div>
-      </div>
-    </div>
-    <div class="cw">
-      <button class="ct" onclick="togglePal('${uid}_bp')" title="배경 색상">
-        <span class="ct-a" style="font-size:9px;background:#FCD34D;padding:0 1px;">ab</span>
-        <div class="ct-bar" id="${uid}_bb" style="background:#FCD34D;"></div>
-      </button>
-      <div class="pal" id="${uid}_bp">
-        <div class="pal-title">배경 색상</div>
-        <div class="cg" id="${uid}_bcg"></div>
-      </div>
-    </div>
-    <div class="tb-sep"></div>
-    <button class="tb-b" onclick="edCmd('insertOrderedList','${areaId}')" title="번호 목록">
-      <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
-    </button>
-    <button class="tb-b" onclick="edCmd('insertUnorderedList','${areaId}')" title="글머리 목록">
-      <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>
-    </button>
-    <div class="tb-sep"></div>
-    <button class="tb-b" style="width:auto;padding:0 4px;font-size:11px;" onclick="edIns('${areaId}','• ')" title="• 글머리">•</button>
-  `;
-  const fcg = document.getElementById(`${uid}_fcg`);
-  if (fcg) fcg.innerHTML = EDITOR_FC.map(c=>`<div class="cd" style="background:${c}" onclick="edFC('${uid}','${areaId}','${c}')"></div>`).join("");
-  const bcg = document.getElementById(`${uid}_bcg`);
-  if (bcg) bcg.innerHTML = EDITOR_BC.map(c=>`<div class="cd" style="background:${c};border:1px solid #e2e8f0;" onclick="edBC('${uid}','${areaId}','${c}')"></div>`).join("");
-}
-
-function edCmd(cmd, id) { const el=document.getElementById(id); if(el){el.focus();document.execCommand(cmd,false,null);} }
-function edSize(val, id) { if(!val)return; const el=document.getElementById(id); if(el){el.focus();document.execCommand("fontSize",false,val);} }
-function edIns(id, txt) { const el=document.getElementById(id); if(el){el.focus();document.execCommand("insertText",false,txt);} }
-function edFC(uid, areaId, color) {
-  document.getElementById(`${uid}_fb`).style.background=color;
-  document.getElementById(`${uid}_fp`).classList.remove("show");
-  edCmd("foreColor",areaId); document.getElementById(areaId).focus(); document.execCommand("foreColor",false,color);
-}
-function edBC(uid, areaId, color) {
-  document.getElementById(`${uid}_bb`).style.background=color;
-  document.getElementById(`${uid}_bp`).classList.remove("show");
-  document.getElementById(areaId).focus(); document.execCommand("hiliteColor",false,color);
-}
-function togglePal(id) {
-  document.querySelectorAll(".pal").forEach(p=>{if(p.id!==id)p.classList.remove("show");});
-  document.getElementById(id).classList.toggle("show");
-}
-document.addEventListener("click", e=>{
-  if(!e.target.closest(".cw")) document.querySelectorAll(".pal").forEach(p=>p.classList.remove("show"));
-});
-
 function applyDateFilter() {
   const d = document.getElementById("histDateFilter").value;
   const badge = document.getElementById("filterBadge");
@@ -1038,11 +933,6 @@ function openEditMode(idx, e) {
   document.querySelectorAll(".edit-mode").forEach((em,i) => { if(i!==idx) em.classList.remove("open"); });
   const em = document.getElementById("emode-"+idx);
   em.classList.toggle("open");
-  if (em.classList.contains("open")) {
-    mkToolbar("em-tb-c-"+idx, "em-coaching-"+idx);
-    mkToolbar("em-tb-f-"+idx, "em-feedback-"+idx);
-    mkToolbar("em-tb-n-"+idx, "em-note-"+idx);
-  }
 }
 
 function closeEditMode(idx) {
@@ -1059,9 +949,9 @@ async function saveEditMode(idx) {
     memo:  document.getElementById(`em-qa-memo-${idx}-${i}`).value || ""
   }));
   const totalScore = qa.reduce((s, x) => s + x.score, 0);
-  const coaching = document.getElementById(`em-coaching-${idx}`).innerText;
-  const feedback = document.getElementById(`em-feedback-${idx}`).innerText;
-  const note = document.getElementById(`em-note-${idx}`).innerText;
+  const coaching = document.getElementById(`em-coaching-${idx}`).value;
+  const feedback = document.getElementById(`em-feedback-${idx}`).value;
+  const note = document.getElementById(`em-note-${idx}`).value;
 
   const rowEl = document.querySelector(`#hdet-${idx}`).closest(".hist-item-wrap");
   const date   = rowEl ? rowEl.dataset.date  : "";
@@ -1096,6 +986,84 @@ async function saveEditMode(idx) {
   btn.disabled = false;
 }
 
+async function downloadPdf(idx, e) {
+  if (e) e.stopPropagation();
+  const r = historyRowsCache[idx];
+  if (!r || typeof html2pdf === "undefined") {
+    showToast("❌ PDF 생성 라이브러리를 불러오지 못했어요.", true);
+    return;
+  }
+
+  const qaVals = QA_ITEMS.map((item, i) => {
+    const raw = Number(r[4 + i * 2]);
+    const score = isNaN(raw) ? item.max : raw;
+    return { ...item, score, memo: r[5 + i * 2] || "" };
+  });
+  const totalRaw = Number(r[4 + QA_ITEMS.length * 2]);
+  const total = isNaN(totalRaw) ? qaVals.reduce((s,x)=>s+x.score,0) : totalRaw;
+  const coaching = r[4 + QA_ITEMS.length * 2 + 1] || "";
+  const feedback = r[4 + QA_ITEMS.length * 2 + 2] || "";
+  const note     = r[4 + QA_ITEMS.length * 2 + 3] || "";
+
+  let lastCat = null;
+  const rowsHtml = qaVals.map(x => {
+    let head = "";
+    if (x.cat !== lastCat) {
+      head = `<tr><td colspan="3" style="background:#F3F4F6;font-weight:700;padding:8px 10px;font-size:12px;">${x.cat}</td></tr>`;
+      lastCat = x.cat;
+    }
+    const color = x.score >= x.max ? "#065F46" : x.score === 0 ? "#991B1B" : "#92400E";
+    const bg    = x.score >= x.max ? "#ECFDF5" : x.score === 0 ? "#FEF2F2" : "#FFFBEB";
+    return `${head}<tr>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:12px;">${x.name}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:center;background:${bg};color:${color};font-weight:700;font-size:12px;">${x.score} / ${x.max}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;color:#666;font-size:11px;">${x.memo || "-"}</td>
+    </tr>`;
+  }).join("");
+
+  const wrap = document.createElement("div");
+  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;position:fixed;left:-9999px;top:0;background:#fff;";
+  wrap.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #3E749F;padding-bottom:14px;margin-bottom:18px;">
+      <div>
+        <div style="font-size:20px;font-weight:700;">QA 코칭 기록</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">${currentMember.name} · ${currentMember.squad} · ${r[2] || "-"}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;color:#64748B;">총점</div>
+        <div style="font-size:28px;font-weight:700;color:#3E749F;">${total} / ${QA_MAX_TOTAL}</div>
+      </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+      <thead><tr>
+        <th style="text-align:left;padding:8px 10px;background:#3E749F;color:#fff;font-size:12px;width:44%;">항목</th>
+        <th style="text-align:center;padding:8px 10px;background:#3E749F;color:#fff;font-size:12px;width:18%;">점수</th>
+        <th style="text-align:left;padding:8px 10px;background:#3E749F;color:#fff;font-size:12px;">메모</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    ${coaching ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">코칭 내용</div><div style="font-size:13px;white-space:pre-wrap;">${coaching}</div></div>` : ""}
+    ${feedback ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">추후 피드백 예정</div><div style="font-size:13px;white-space:pre-wrap;">${feedback}</div></div>` : ""}
+    ${note ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">비고</div><div style="font-size:13px;white-space:pre-wrap;">${note}</div></div>` : ""}
+  `;
+  document.body.appendChild(wrap);
+
+  const fileName = `QA코칭_${currentMember.name}_${r[2] || "date"}.pdf`;
+  try {
+    await html2pdf().set({
+      margin: 10,
+      filename: fileName,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    }).from(wrap).save();
+  } catch (err) {
+    showToast("❌ PDF 생성에 실패했어요.", true);
+  } finally {
+    document.body.removeChild(wrap);
+  }
+}
+
 function toggleHist(idx) {
   const det  = document.getElementById("hdet-" + idx);
   const chev = document.getElementById("chev-" + idx);
@@ -1119,7 +1087,7 @@ function resetForm() {
   document.getElementById("f-monitor").value = "";
   buildQaBody();
   ["f-coaching","f-feedback","f-note"].forEach(id => {
-    const el = document.getElementById(id); if (el) el.innerText = "";
+    const el = document.getElementById(id); if (el) el.value = "";
   });
 }
 
@@ -1150,9 +1118,9 @@ function saveDraft() {
     squad:    currentMember.squad,
     date:     document.getElementById("f-date")?.value || "",
     monitor:  document.getElementById("f-monitor")?.value || "",
-    coaching: document.getElementById("f-coaching")?.innerHTML || "",
-    feedback: document.getElementById("f-feedback")?.innerHTML || "",
-    note:     document.getElementById("f-note")?.innerHTML || "",
+    coaching: document.getElementById("f-coaching")?.value || "",
+    feedback: document.getElementById("f-feedback")?.value || "",
+    note:     document.getElementById("f-note")?.value || "",
     savedAt:   new Date().toLocaleString("ko-KR")
   };
   const drafts = getDrafts();
@@ -1169,9 +1137,9 @@ function loadDraftById(id) {
   if (!d) return;
   if (d.date)     { const el=document.getElementById("f-date"); if(el) el.value=d.date; }
   if (d.monitor)  { const el=document.getElementById("f-monitor"); if(el) el.value=d.monitor; }
-  if (d.coaching) { const el=document.getElementById("f-coaching"); if(el) el.innerHTML=d.coaching; }
-  if (d.feedback) { const el=document.getElementById("f-feedback"); if(el) el.innerHTML=d.feedback; }
-  if (d.note)     { const el=document.getElementById("f-note"); if(el) el.innerHTML=d.note; }
+  if (d.coaching) { const el=document.getElementById("f-coaching"); if(el) el.value=d.coaching; }
+  if (d.feedback) { const el=document.getElementById("f-feedback"); if(el) el.value=d.feedback; }
+  if (d.note)     { const el=document.getElementById("f-note"); if(el) el.value=d.note; }
   switchTab("new", document.querySelectorAll(".tab-btn")[0]);
   toggleDraftSidebar(false);
   showToast("📋 임시저장 내용을 불러왔어요!", false);
