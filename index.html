@@ -559,6 +559,13 @@ function qaScoreClass(score, max) {
   return "partial";
 }
 
+function qaGrade(total) {
+  if (total >= 90) return { label: "최우수", color: "#065F46", bg: "#ECFDF5" };
+  if (total >= 70) return { label: "우수",   color: "#1D4ED8", bg: "#EFF6FF" };
+  if (total >= 60) return { label: "보통",   color: "#92400E", bg: "#FFFBEB" };
+  return                  { label: "미흡",   color: "#991B1B", bg: "#FEF2F2" };
+}
+
 let currentMember = null;
 let allMembers    = [];
 let historyRowsCache = [];
@@ -678,8 +685,10 @@ async function loadHistory() {
       });
       const totalScore = Number(r[4 + QA_ITEMS.length * 2]);
       const totalDisp = isNaN(totalScore) ? qaVals.reduce((s,x)=>s+x.score,0) : totalScore;
+      const grade = qaGrade(totalDisp);
       const deducted = qaVals.filter(x => x.score < x.max);
       const badges = `<span class="badge b-ok">총점 ${totalDisp} / ${QA_MAX_TOTAL}</span>` +
+        `<span class="badge" style="background:${grade.bg};color:${grade.color};">${grade.label}</span>` +
         (deducted.length === 0
           ? ""
           : deducted.slice(0, 3).map(x =>
@@ -721,7 +730,7 @@ async function loadHistory() {
             </div>
             <div class="detail-view" id="dview-${idx}" style="padding:0 16px 16px;">
               <div class="detail-section">
-                <div class="detail-label">QA 평가 (총점 ${totalDisp} / ${QA_MAX_TOTAL})</div>
+                <div class="detail-label">QA 평가 (총점 ${totalDisp} / ${QA_MAX_TOTAL} · ${grade.label})</div>
                 <table class="detail-table">
                   ${qaRows}
                 </table>
@@ -865,7 +874,10 @@ function updateQaTotal() {
     if (sel) total += Number(sel.value) || 0;
   });
   const badge = document.getElementById("qaTotalBadge");
-  if (badge) badge.textContent = `${total} / ${QA_MAX_TOTAL}`;
+  if (badge) {
+    const g = qaGrade(total);
+    badge.innerHTML = `${total} / ${QA_MAX_TOTAL} <span style="background:${g.bg};color:${g.color};border-radius:999px;padding:2px 9px;font-size:12px;margin-left:6px;">${g.label}</span>`;
+  }
   const fill = document.getElementById("qaTotalFill");
   if (fill) fill.style.width = Math.min(100, (total / QA_MAX_TOTAL * 100)) + "%";
 }
@@ -1001,6 +1013,7 @@ async function downloadPdf(idx, e) {
   });
   const totalRaw = Number(r[4 + QA_ITEMS.length * 2]);
   const total = isNaN(totalRaw) ? qaVals.reduce((s,x)=>s+x.score,0) : totalRaw;
+  const grade = qaGrade(total);
   const coaching = r[4 + QA_ITEMS.length * 2 + 1] || "";
   const feedback = r[4 + QA_ITEMS.length * 2 + 2] || "";
   const note     = r[4 + QA_ITEMS.length * 2 + 3] || "";
@@ -1015,16 +1028,16 @@ async function downloadPdf(idx, e) {
     const color = x.score >= x.max ? "#065F46" : x.score === 0 ? "#991B1B" : "#92400E";
     const bg    = x.score >= x.max ? "#ECFDF5" : x.score === 0 ? "#FEF2F2" : "#FFFBEB";
     return `${head}<tr>
-      <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:12px;">${x.name}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:12px;word-break:break-word;">${x.name}</td>
       <td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:center;background:${bg};color:${color};font-weight:700;font-size:12px;">${x.score} / ${x.max}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #eee;color:#666;font-size:11px;">${x.memo || "-"}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;color:#666;font-size:11px;word-break:break-word;">${x.memo || "-"}</td>
     </tr>`;
   }).join("");
 
   const overlay = document.createElement("div");
   overlay.style.cssText = "position:fixed;inset:0;background:#fff;z-index:99999;overflow:auto;display:flex;justify-content:center;padding:20px;";
   const wrap = document.createElement("div");
-  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;background:#fff;";
+  wrap.style.cssText = "box-sizing:border-box;padding:24px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:700px;background:#fff;";
   wrap.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #DCEEF9;padding-bottom:14px;margin-bottom:18px;">
       <div>
@@ -1034,9 +1047,10 @@ async function downloadPdf(idx, e) {
       <div style="text-align:right;">
         <div style="font-size:12px;color:#64748B;">총점</div>
         <div style="font-size:28px;font-weight:700;color:#5B8DB8;">${total} / ${QA_MAX_TOTAL}</div>
+        <div style="display:inline-block;margin-top:4px;background:${grade.bg};color:${grade.color};font-size:12px;font-weight:700;padding:3px 12px;border-radius:999px;">${grade.label}</div>
       </div>
     </div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+    <table style="width:100%;table-layout:fixed;border-collapse:collapse;margin-bottom:20px;">
       <thead><tr>
         <th style="text-align:left;padding:8px 10px;background:#EAF3FA;color:#2E6088;font-size:12px;width:44%;border-bottom:1.5px solid #DCEEF9;">항목</th>
         <th style="text-align:center;padding:8px 10px;background:#EAF3FA;color:#2E6088;font-size:12px;width:18%;border-bottom:1.5px solid #DCEEF9;">점수</th>
@@ -1058,7 +1072,7 @@ async function downloadPdf(idx, e) {
       margin: 10,
       filename: fileName,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, backgroundColor: "#ffffff" },
+      html2canvas: { scale: 2, backgroundColor: "#ffffff", windowWidth: wrap.scrollWidth },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     }).from(wrap).save();
   } catch (err) {
