@@ -1021,8 +1021,10 @@ async function downloadPdf(idx, e) {
     </tr>`;
   }).join("");
 
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;inset:0;background:#fff;z-index:99999;overflow:auto;display:flex;justify-content:center;padding:20px;";
   const wrap = document.createElement("div");
-  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;position:absolute;left:0;top:0;z-index:-9999;background:#fff;";
+  wrap.style.cssText = "padding:28px;font-family:'Noto Sans KR',sans-serif;color:#0F172A;width:760px;background:#fff;";
   wrap.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #DCEEF9;padding-bottom:14px;margin-bottom:18px;">
       <div>
@@ -1046,7 +1048,8 @@ async function downloadPdf(idx, e) {
     ${feedback ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">추후 피드백 예정</div><div style="font-size:13px;white-space:pre-wrap;">${feedback}</div></div>` : ""}
     ${note ? `<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin-bottom:6px;">비고</div><div style="font-size:13px;white-space:pre-wrap;">${note}</div></div>` : ""}
   `;
-  document.body.appendChild(wrap);
+  overlay.appendChild(wrap);
+  document.body.appendChild(overlay);
   await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
 
   const fileName = `QA코칭_${currentMember.name}_${r[2] || "date"}.pdf`;
@@ -1061,7 +1064,7 @@ async function downloadPdf(idx, e) {
   } catch (err) {
     showToast("❌ PDF 생성에 실패했어요.", true);
   } finally {
-    document.body.removeChild(wrap);
+    document.body.removeChild(overlay);
   }
 }
 
