@@ -233,7 +233,23 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
 .qa-score-sel.full{background-color:var(--gn);color:var(--gnt);border-color:var(--gnb);}
 .qa-score-sel.zero{background-color:var(--rd);color:var(--rdt);border-color:var(--rdb);}
 .qa-score-sel.partial{background-color:var(--wn);color:var(--wnt);border-color:var(--wnb);}
-.qa-memo{width:100%;margin-top:8px;padding:7px 11px;border:1.5px solid var(--wnb);border-radius:var(--rsm);font-size:12px;font-family:inherit;background:var(--wn);color:var(--tx);outline:none;}
+.qa-memo{width:100%;margin-top:8px;padding:7px 11px;border:1.5px solid var(--wnb);border-radius:var(--rsm);font-size:12px;line-height:1.55;font-family:inherit;background:var(--wn);color:var(--tx);outline:none;resize:vertical;min-height:40px;white-space:pre-wrap;display:block;}
+.stt-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0 8px;}
+.stt-tools select,.stt-tools input{padding:7px 10px;border:1.5px solid var(--br);border-radius:var(--rsm);font-size:12px;font-family:inherit;background:#fff;color:var(--tx);outline:none;}
+.stt-tools select{flex:1;min-width:180px;}
+.stt-tools input{width:130px;}
+.stt-viewer{max-height:320px;overflow:auto;border:1px solid var(--br);border-radius:var(--rsm);background:#fff;}
+.stt-line{display:flex;gap:8px;padding:6px 10px;font-size:12px;line-height:1.55;cursor:pointer;border-bottom:1px solid #F1F5F9;}
+.stt-line:last-child{border-bottom:none;}
+.stt-line:hover{background:var(--bll);}
+.stt-line.cited{background:#FFFBEB;}
+.stt-line.hidden{display:none;}
+.stt-time{color:var(--mt);flex-shrink:0;width:58px;font-variant-numeric:tabular-nums;}
+.stt-sp{flex-shrink:0;width:42px;font-weight:700;}
+.stt-line.agent .stt-sp{color:var(--bld);}
+.stt-line.cust .stt-sp{color:#64748B;}
+.stt-note{font-size:11px;color:var(--mt);margin-top:8px;line-height:1.6;}
+.qa-item.target{background:var(--bll);}
 .qa-memo.hidden{display:none;}
 
 /* 코칭 기록 */
@@ -446,6 +462,23 @@ body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);co
           <div class="form-grid">
             <div class="field"><label>날짜</label><input type="date" id="f-date"/></div>
             <div class="field"><label>모니터링 진행자</label><input type="text" id="f-monitor" placeholder="진행자 이름"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 녹취록(STT) 불러오기 -->
+      <div class="card">
+        <div class="card-head"><span class="card-head-title">🎧 녹취록(STT) 불러오기</span></div>
+        <div class="card-body">
+          <input type="file" id="sttFile" accept=".txt,.log,.json,text/plain" onchange="loadStt()" style="font-size:13px;width:100%;"/>
+          <div id="sttWrap" style="display:none;">
+            <div class="stt-tools">
+              <select id="sttTarget" onchange="setCiteTarget(Number(this.value))"></select>
+              <input type="text" id="sttFilter" placeholder="녹취 내 검색" oninput="filterStt()"/>
+              <span id="sttCount" style="font-size:11px;color:var(--mt);"></span>
+            </div>
+            <div class="stt-viewer" id="sttViewer"></div>
+            <div class="stt-note">① 위에서 근거를 넣을 항목을 고르고(아래 점수·메모를 건드리면 자동 선택돼요) ② 해당 발화를 클릭하면 그 항목 메모에 근거로 추가돼요.<br>※ 녹취 파일은 저장되지 않고, 클릭해서 넣은 발화만 메모로 저장돼요.</div>
           </div>
         </div>
       </div>
@@ -704,7 +737,7 @@ async function loadHistory() {
           lastCat = x.cat;
         }
         const cls = x.score >= x.max ? "dr-ok" : x.score === 0 ? "dr-bad" : "dr-warn";
-        return `${head}<tr><td class="dt-item">${x.name}</td><td><span class="detail-result ${cls}">${x.score} / ${x.max}</span>${x.memo ? ` <span style="color:var(--mt);font-size:12px;">· ${x.memo}</span>` : ""}</td></tr>`;
+        return `${head}<tr><td class="dt-item">${x.name}</td><td><span class="detail-result ${cls}">${x.score} / ${x.max}</span>${x.memo ? `<div style="color:var(--mt);font-size:12px;white-space:pre-wrap;margin-top:4px;line-height:1.55;">${esc(x.memo)}</div>` : ""}</td></tr>`;
       }).join("");
 
       const coaching  = r[4 + QA_ITEMS.length * 2 + 1] || "";
@@ -758,7 +791,7 @@ async function loadHistory() {
                         <td><select class="qa-score-sel ${qaScoreClass(x.score, x.max)}" id="em-qa-${idx}-${i}" data-max="${x.max}" onchange="this.className='qa-score-sel '+qaScoreClass(Number(this.value),${x.max})">
                           ${Array.from({length:x.max+1},(_,v)=>x.max-v).map(v=>`<option value="${v}" ${v===x.score?'selected':''}>${v}</option>`).join('')}
                         </select></td>
-                        <td><input class="edit-inp" type="text" id="em-qa-memo-${idx}-${i}" value="${x.memo}" placeholder="사유(선택)"/></td>
+                        <td><textarea class="edit-inp" rows="3" id="em-qa-memo-${idx}-${i}" placeholder="사유(선택)" style="resize:vertical;white-space:pre-wrap;line-height:1.5;">${esc(x.memo)}</textarea></td>
                       </tr>`).join('')}
                     </tbody>
                   </table>
@@ -842,14 +875,14 @@ function buildQaBody() {
       lastCat = item.cat;
     }
     html += `
-      <div class="qa-item">
+      <div class="qa-item" id="qa-item-${i}">
         <div class="qa-item-top">
           <span class="qa-item-name">${item.name}</span>
           <select class="qa-score-sel full" id="qa-score-${i}" data-max="${item.max}" onchange="onQaScoreChange(${i})">
             ${Array.from({length:item.max+1},(_,v)=>item.max-v).map(v=>`<option value="${v}" ${v===item.max?'selected':''}>${v} / ${item.max}</option>`).join('')}
           </select>
         </div>
-        <input type="text" class="qa-memo hidden" id="qa-memo-${i}" placeholder="감점 사유를 입력하세요"/>
+        <textarea class="qa-memo hidden" id="qa-memo-${i}" rows="2" placeholder="감점 사유를 입력하세요" onfocus="setCiteTarget(${i})"></textarea>
       </div>`;
   });
   html += `</div>`;
@@ -863,8 +896,93 @@ function onQaScoreChange(i) {
   const max  = Number(sel.dataset.max);
   const val  = Number(sel.value);
   sel.className = "qa-score-sel " + qaScoreClass(val, max);
-  if (memo) memo.classList.toggle("hidden", val >= max);
+  if (memo) memo.classList.toggle("hidden", val >= max && !memo.value.trim());
+  setCiteTarget(i);
   updateQaTotal();
+}
+
+/* ── 녹취록(STT) 불러오기 · 근거 발화 넣기 ── */
+let sttLines  = [];
+let citeTarget = 0;
+
+function esc(v) {
+  return String(v == null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function parseSttLines(raw) {
+  const reDict = /['"]time['"]\s*:\s*(['"])(.*?)\1\s*,\s*['"]speaker['"]\s*:\s*(['"])(.*?)\3\s*,\s*['"]sentence['"]\s*:\s*(['"])([\s\S]*)\5\s*\}\s*,?\s*$/;
+  const rePlain = /^\[?(\d{1,2}:\d{2}(?::\d{2})?)\]?\s*(상담원|고객)\s*[:：]\s*(.*)$/;
+  const out = [];
+  raw.split(/\r?\n/).forEach(line => {
+    if (!line.trim()) return;
+    let m = line.match(reDict);
+    if (m) { out.push({ time: m[2].trim().slice(-8), speaker: m[4].trim(), text: m[6].trim() }); return; }
+    m = line.trim().match(rePlain);
+    if (m) { out.push({ time: m[1], speaker: m[2], text: m[3].trim() }); return; }
+    out.push({ time: "", speaker: "", text: line.trim() });
+  });
+  return out;
+}
+
+async function loadStt() {
+  const f = document.getElementById("sttFile").files[0];
+  if (!f) { clearStt(); return; }
+  let raw = await f.text();
+  if (raw.includes("\uFFFD")) { try { raw = new TextDecoder("euc-kr").decode(await f.arrayBuffer()); } catch(e) {} }
+  sttLines = parseSttLines(raw);
+  renderStt();
+  if (!sttLines.length) showToast("파일에서 녹취 내용을 찾지 못했어요.", true);
+}
+
+function renderStt() {
+  const wrap = document.getElementById("sttWrap");
+  if (!sttLines.length) { wrap.style.display = "none"; return; }
+  wrap.style.display = "block";
+  document.getElementById("sttTarget").innerHTML = QA_ITEMS.map((q, i) =>
+    `<option value="${i}">${i + 1}. ${q.name}</option>`).join("");
+  document.getElementById("sttViewer").innerHTML = sttLines.map((l, i) =>
+    `<div class="stt-line ${l.speaker === "상담원" ? "agent" : "cust"}" id="stt-line-${i}" onclick="citeLine(${i})">` +
+    `<span class="stt-time">${esc(l.time)}</span><span class="stt-sp">${esc(l.speaker)}</span><span class="stt-tx">${esc(l.text)}</span></div>`).join("");
+  document.getElementById("sttFilter").value = "";
+  document.getElementById("sttCount").textContent = `${sttLines.length}줄`;
+  setCiteTarget(citeTarget);
+}
+
+function filterStt() {
+  const kw = document.getElementById("sttFilter").value.trim().toLowerCase();
+  sttLines.forEach((l, i) => {
+    const el = document.getElementById(`stt-line-${i}`);
+    if (el) el.classList.toggle("hidden", !!kw && !(`${l.speaker} ${l.text}`.toLowerCase().includes(kw)));
+  });
+}
+
+function setCiteTarget(i) {
+  citeTarget = i;
+  document.querySelectorAll(".qa-item.target").forEach(el => el.classList.remove("target"));
+  const row = document.getElementById(`qa-item-${i}`);
+  if (row) row.classList.add("target");
+  const sel = document.getElementById("sttTarget");
+  if (sel && sel.options.length) sel.value = String(i);
+}
+
+function citeLine(i) {
+  const l = sttLines[i];
+  const memo = document.getElementById(`qa-memo-${citeTarget}`);
+  if (!l || !memo) return;
+  const quote = `${l.time ? `[${l.time}] ` : ""}${l.speaker ? `${l.speaker}: ` : ""}"${l.text}"`;
+  if (memo.value.includes(quote)) { showToast("이미 추가된 발화예요."); return; }
+  let v = memo.value.replace(/\s+$/, "");
+  if (!v.includes("▶ 근거 발화")) v += (v ? "\n" : "") + "▶ 근거 발화";
+  memo.value = v + "\n" + quote;
+  memo.classList.remove("hidden");
+  document.getElementById(`stt-line-${i}`).classList.add("cited");
+  showToast(`📎 ${citeTarget + 1}. ${QA_ITEMS[citeTarget].name} 메모에 추가했어요`);
+}
+
+function clearStt() {
+  sttLines = [];
+  const fl = document.getElementById("sttFile"); if (fl) fl.value = "";
+  const wrap = document.getElementById("sttWrap"); if (wrap) wrap.style.display = "none";
 }
 
 function updateQaTotal() {
@@ -1030,7 +1148,7 @@ async function downloadPdf(idx, e) {
     return `${head}<tr>
       <td style="padding:6px 10px;border-bottom:1px solid #eee;font-size:12px;word-break:break-word;">${x.name}</td>
       <td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:center;background:${bg};color:${color};font-weight:700;font-size:12px;">${x.score} / ${x.max}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #eee;color:#666;font-size:11px;word-break:break-word;">${x.memo || "-"}</td>
+      <td style="padding:6px 10px;border-bottom:1px solid #eee;color:#666;font-size:11px;word-break:break-word;white-space:pre-wrap;line-height:1.5;">${x.memo ? esc(x.memo) : "-"}</td>
     </tr>`;
   }).join("");
 
@@ -1104,6 +1222,7 @@ function resetForm() {
   setToday();
   document.getElementById("f-monitor").value = "";
   buildQaBody();
+  clearStt();
   ["f-coaching","f-feedback","f-note"].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = "";
   });
